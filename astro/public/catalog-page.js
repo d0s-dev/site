@@ -14805,7 +14805,6 @@ function renderOverlay(overlayState, elements2) {
     overlayLoading,
     overlayProviders,
     overlaySource,
-    overlayStatus,
     overlaySummary,
     overlayTitle,
     overlayUpdated,

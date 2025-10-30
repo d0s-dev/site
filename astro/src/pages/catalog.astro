@@ -406,7 +406,12 @@ const serializeJson = (input: unknown) =>
         </div>
       </div>
 
-      <script type="application/json" id="catalog-view-models" set:html={serializeJson(viewModels)}></script>
+      <script
+        type="application/json"
+        id="catalog-view-models"
+        set:html={serializeJson(viewModels)}
+        is:inline
+      ></script>
 
       <div class="overflow-hidden rounded-2xl border border-[#02224D] bg-[#001233]">
         <div class="border-b border-[#02224D] p-6">
@@ -532,7 +537,12 @@ const serializeJson = (input: unknown) =>
     </div>
   </div>
 
-  <script type="application/json" id="catalog-cve-data" set:html={serializeJson(cveChartPayload)}></script>
+  <script
+    type="application/json"
+    id="catalog-cve-data"
+    set:html={serializeJson(cveChartPayload)}
+    is:inline
+  ></script>
 
-  <script type="module" src="/catalog-page.js"></script>
+  <script type="module" src="/catalog-page.js" is:inline></script>
 </BaseLayout>

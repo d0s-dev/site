@@ -1,9 +1,9 @@
-# Dependencies
+# Dependencies (legacy React app was here, now in astro/)
 node_modules/
 .pnp
 .pnp.js
 
-# Production
+# Production (Astro builds to astro/dist/)
 dist/
 build/
 
@@ -38,3 +38,4 @@ lerna-debug.log*
 
 # Zone.Identifier files (WSL)
 *.Zone.Identifier
+migration-notes/
