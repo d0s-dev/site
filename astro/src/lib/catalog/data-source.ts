@@ -66,7 +66,7 @@ export async function fetchCatalogData(
   }
 
   try {
-  const url = `${APPS_BASE_URL}/${DEFAULT_REF}/${APPS_INDEX_PATH}`;
+    const url = `${APPS_BASE_URL}/${DEFAULT_REF}/${APPS_INDEX_PATH}`;
     const result = await fetchJson<CatalogResponse>(url, {
       headers: cached?.etag ? { "If-None-Match": cached.etag } : undefined,
       cache: "no-store",

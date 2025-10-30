@@ -9,7 +9,8 @@ type TerminalConfig = {
   loop: boolean;
 };
 
-const delay = (ms: number) => new Promise((resolve) => window.setTimeout(resolve, ms));
+const delay = (ms: number) =>
+  new Promise((resolve) => window.setTimeout(resolve, ms));
 
 async function runTerminal({ element, commands, loop }: TerminalConfig) {
   const log = element.querySelector<HTMLElement>(".terminal-log");
@@ -74,7 +75,9 @@ async function runTerminal({ element, commands, loop }: TerminalConfig) {
 function initTerminals() {
   if (typeof document === "undefined") return;
   const terminals = Array.from(
-    document.querySelectorAll<HTMLElement>("[data-terminal-id][data-terminal-commands]"),
+    document.querySelectorAll<HTMLElement>(
+      "[data-terminal-id][data-terminal-commands]",
+    ),
   );
   terminals.forEach((element) => {
     try {

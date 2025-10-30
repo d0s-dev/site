@@ -1,4 +1,4 @@
-import { beforeEach, afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { mockCatalogResponse, mockManifests } from "../mock-data";
 
 const originalFetch = global.fetch;
@@ -6,7 +6,10 @@ const originalBranchEnv = process.env.CATALOG_SOURCE_BRANCH;
 
 const loadDataSource = async () => import("../data-source");
 
-const createResponse = <T>(data: T, init: { etag?: string; status?: number } = {}) => ({
+const createResponse = <T>(
+  data: T,
+  init: { etag?: string; status?: number } = {},
+) => ({
   ok: (init.status ?? 200) < 400,
   status: init.status ?? 200,
   statusText: "OK",
@@ -96,7 +99,9 @@ describe("catalog data-source", () => {
     resetCatalogCache();
     global.fetch = vi.fn().mockRejectedValue(new Error("boom"));
 
-    const result = await fetchCatalogManifest("keycloak", { forceRefresh: true });
+    const result = await fetchCatalogManifest("keycloak", {
+      forceRefresh: true,
+    });
 
     expect(result.source).toBe("mock");
     expect(result.manifest).toEqual(mockManifests.keycloak);
@@ -112,10 +117,14 @@ describe("catalog data-source", () => {
       .mockResolvedValueOnce(createResponse(manifest, { etag: '"zzz"' }))
       .mockResolvedValueOnce(createResponse(manifest, { status: 304 }));
 
-    const first = await fetchCatalogManifest("keycloak", { forceRefresh: true });
+    const first = await fetchCatalogManifest("keycloak", {
+      forceRefresh: true,
+    });
     expect(first.source).toBe("remote");
 
-    const second = await fetchCatalogManifest("keycloak", { forceRefresh: true });
+    const second = await fetchCatalogManifest("keycloak", {
+      forceRefresh: true,
+    });
     expect(second.source).toBe("cache");
     expect(second.manifest).toEqual(first.manifest);
     expect(global.fetch).toHaveBeenCalledTimes(2);
@@ -142,10 +151,13 @@ describe("catalog data-source", () => {
 
   it("respects full ref overrides for manifest fetches", async () => {
     process.env.CATALOG_SOURCE_BRANCH = "refs/tags/v1.2.3";
-    const { fetchCatalogData, fetchCatalogManifest, resetCatalogCache } = await loadDataSource();
+    const { fetchCatalogData, fetchCatalogManifest, resetCatalogCache } =
+      await loadDataSource();
     resetCatalogCache();
 
-    global.fetch = vi.fn().mockResolvedValue(createResponse(mockCatalogResponse));
+    global.fetch = vi
+      .fn()
+      .mockResolvedValue(createResponse(mockCatalogResponse));
 
     await fetchCatalogData({ forceRefresh: true });
     expect(global.fetch).toHaveBeenCalledWith(

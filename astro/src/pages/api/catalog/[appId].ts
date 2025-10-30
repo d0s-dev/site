@@ -1,5 +1,8 @@
 import type { APIRoute } from "astro";
-import { fetchCatalogData, fetchCatalogManifest } from "../../../lib/catalog/data-source";
+import {
+  fetchCatalogData,
+  fetchCatalogManifest,
+} from "../../../lib/catalog/data-source";
 import type { CatalogManifestResult } from "../../../lib/catalog/types";
 
 export async function getStaticPaths() {

@@ -14479,7 +14479,9 @@ var sourceLabelMap = {
 };
 var severityKeys = ["critical", "high", "medium", "low"];
 function buildOverlayElements() {
-  const overlay = document.querySelector("[data-manifest-overlay]");
+  const overlay = document.querySelector(
+    "[data-manifest-overlay]"
+  );
   return {
     overlay,
     overlayBackdrop: overlay?.querySelector("[data-overlay-backdrop]") ?? null,
@@ -14500,7 +14502,9 @@ function buildOverlayElements() {
     providerSelect: overlay?.querySelector("[data-overlay-provider]") ?? null,
     versionSelect: overlay?.querySelector("[data-overlay-version]") ?? null,
     imageList: overlay?.querySelector("[data-overlay-image-list]") ?? null,
-    tabButtons: overlay ? Array.from(overlay.querySelectorAll("[data-overlay-tab]")) : [],
+    tabButtons: overlay ? Array.from(
+      overlay.querySelectorAll("[data-overlay-tab]")
+    ) : [],
     tabContent: overlay?.querySelector("[data-overlay-tab-content]") ?? null
   };
 }
@@ -14535,10 +14539,16 @@ function initFilters() {
   const providerButtons = Array.from(
     document.querySelectorAll("[data-filter-provider]")
   );
-  const searchInput = document.querySelector("[data-filter-search]");
-  const cards = Array.from(document.querySelectorAll("[data-catalog-card]"));
+  const searchInput = document.querySelector(
+    "[data-filter-search]"
+  );
+  const cards = Array.from(
+    document.querySelectorAll("[data-catalog-card]")
+  );
   const emptyState = document.querySelector("[data-empty-state]");
-  const activeCountTarget = document.querySelector("[data-active-count]");
+  const activeCountTarget = document.querySelector(
+    "[data-active-count]"
+  );
   const state = { label: "all", provider: "all", search: "" };
   const setActiveButton = (buttons, value) => {
     buttons.forEach((button) => {
@@ -14604,7 +14614,9 @@ function initFilters() {
   }
   if (searchInput) {
     searchInput.addEventListener("input", (event) => {
-      const value = String(event.target.value ?? "").toLowerCase();
+      const value = String(
+        event.target.value ?? ""
+      ).toLowerCase();
       state.search = value.trim();
       applyFilters();
     });
@@ -14614,7 +14626,9 @@ function initFilters() {
 function initChart() {
   const chartCanvas = document.querySelector("[data-cve-chart]");
   if (!chartCanvas) return;
-  const payload = parseJsonPayload("#catalog-cve-data");
+  const payload = parseJsonPayload(
+    "#catalog-cve-data"
+  );
   if (!payload) return;
   const context = chartCanvas.getContext("2d");
   if (!context) return;
@@ -14643,9 +14657,7 @@ function formatSeverity(summary) {
   return severityKeys.map((key) => summary?.[key] ?? 0).join(" / ");
 }
 function renderTabContent(overlayState, elements2) {
-  const {
-    tabContent
-  } = elements2;
+  const { tabContent } = elements2;
   if (!tabContent) return;
   tabContent.innerHTML = "";
   const manifest = overlayState.manifestResult?.manifest;
@@ -14843,7 +14855,9 @@ function renderOverlay(overlayState, elements2) {
   if (providerSelect) providerSelect.innerHTML = "";
   if (versionSelect) versionSelect.innerHTML = "";
   if (imageList) imageList.innerHTML = "";
-  const providerEntries = Object.entries(manifestResult.manifest.providers ?? {});
+  const providerEntries = Object.entries(
+    manifestResult.manifest.providers ?? {}
+  );
   if (!providerEntries.length) {
     if (providerSelect) {
       const option = document.createElement("option");
@@ -14964,9 +14978,18 @@ function lockScroll(locked) {
   document.body.classList.toggle("overflow-hidden", locked);
 }
 function attachOverlayHandlers(overlayState, elements2, catalogViewModelMap) {
-  const { overlay, overlayBackdrop, overlayClose, providerSelect, versionSelect, tabButtons } = elements2;
+  const {
+    overlay,
+    overlayBackdrop,
+    overlayClose,
+    providerSelect,
+    versionSelect,
+    tabButtons
+  } = elements2;
   if (!overlay) return;
-  const cards = Array.from(document.querySelectorAll("[data-catalog-card]"));
+  const cards = Array.from(
+    document.querySelectorAll("[data-catalog-card]")
+  );
   const resetOverlay = () => {
     overlayState.appId = null;
     overlayState.manifestResult = null;
@@ -14975,10 +14998,13 @@ function attachOverlayHandlers(overlayState, elements2, catalogViewModelMap) {
     overlayState.imageIndex = 0;
     overlayState.tab = "overview";
     overlayState.viewModel = null;
-    if (elements2.overlayContent) elements2.overlayContent.classList.add("hidden");
+    if (elements2.overlayContent)
+      elements2.overlayContent.classList.add("hidden");
     if (elements2.overlayError) elements2.overlayError.classList.add("hidden");
-    if (elements2.overlayLoading) elements2.overlayLoading.classList.remove("hidden");
-    if (elements2.overlayStatus) elements2.overlayStatus.textContent = "Loading manifest\u2026";
+    if (elements2.overlayLoading)
+      elements2.overlayLoading.classList.remove("hidden");
+    if (elements2.overlayStatus)
+      elements2.overlayStatus.textContent = "Loading manifest\u2026";
     if (elements2.imageList) elements2.imageList.innerHTML = "";
     if (elements2.tabContent) elements2.tabContent.innerHTML = "";
     tabButtons.forEach((button) => {
@@ -15028,10 +15054,13 @@ function attachOverlayHandlers(overlayState, elements2, catalogViewModelMap) {
     overlay.classList.remove("hidden");
     overlay.setAttribute("aria-hidden", "false");
     lockScroll(true);
-    if (elements2.overlayLoading) elements2.overlayLoading.classList.remove("hidden");
-    if (elements2.overlayContent) elements2.overlayContent.classList.add("hidden");
+    if (elements2.overlayLoading)
+      elements2.overlayLoading.classList.remove("hidden");
+    if (elements2.overlayContent)
+      elements2.overlayContent.classList.add("hidden");
     if (elements2.overlayError) elements2.overlayError.classList.add("hidden");
-    if (elements2.overlayStatus) elements2.overlayStatus.textContent = "Loading manifest\u2026";
+    if (elements2.overlayStatus)
+      elements2.overlayStatus.textContent = "Loading manifest\u2026";
     try {
       const response = await fetch(`/api/catalog/${encodeURIComponent(appId)}`);
       if (!response.ok) {
@@ -15041,8 +15070,10 @@ function attachOverlayHandlers(overlayState, elements2, catalogViewModelMap) {
       overlayState.manifestResult = payload;
       renderOverlay(overlayState, elements2);
     } catch (error) {
-      if (elements2.overlayLoading) elements2.overlayLoading.classList.add("hidden");
-      if (elements2.overlayError) elements2.overlayError.classList.remove("hidden");
+      if (elements2.overlayLoading)
+        elements2.overlayLoading.classList.add("hidden");
+      if (elements2.overlayError)
+        elements2.overlayError.classList.remove("hidden");
       if (elements2.overlayErrorMessage) {
         const message = error instanceof Error ? error.message : "Unknown manifest error";
         elements2.overlayErrorMessage.textContent = message;
@@ -15061,7 +15092,10 @@ function attachOverlayHandlers(overlayState, elements2, catalogViewModelMap) {
     void openOverlay(card);
   };
   cards.forEach((card) => {
-    card.addEventListener("click", (event) => handleCardActivation(event, card));
+    card.addEventListener(
+      "click",
+      (event) => handleCardActivation(event, card)
+    );
     card.addEventListener("keydown", (event) => {
       if (event.key === "Enter" || event.key === " ") {
         handleCardActivation(event, card);
@@ -15105,7 +15139,9 @@ function initCatalogPage() {
   }
 }
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initCatalogPage, { once: true });
+  document.addEventListener("DOMContentLoaded", initCatalogPage, {
+    once: true
+  });
 } else {
   initCatalogPage();
 }

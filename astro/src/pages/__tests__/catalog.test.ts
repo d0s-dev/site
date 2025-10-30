@@ -1,8 +1,8 @@
-import { beforeAll, describe, expect, it } from "vitest";
 import { execSync } from "node:child_process";
 import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { beforeAll, describe, expect, it } from "vitest";
 
 const projectRoot = fileURLToPath(new URL("../../..", import.meta.url));
 const distCatalogPath = join(projectRoot, "dist", "catalog", "index.html");
@@ -21,8 +21,8 @@ describe("catalog page build output", () => {
   });
 
   it("serializes catalog view models into the document", () => {
-    expect(catalogHtml).toContain("id=\"catalog-view-models\"");
-    expect(catalogHtml).toMatch(/\"id\":\"keycloak\"/);
+    expect(catalogHtml).toContain('id="catalog-view-models"');
+    expect(catalogHtml).toMatch(/"id":"keycloak"/);
   });
 
   it("renders catalog summary metrics", () => {

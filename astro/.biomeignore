@@ -1,0 +1,7 @@
+# Generated files and build outputs
+public/
+dist/
+.astro/
+
+# Dependencies
+node_modules/

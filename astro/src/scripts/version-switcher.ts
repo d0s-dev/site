@@ -2,11 +2,13 @@ function initVersionSwitcher() {
   if (typeof document === "undefined") return;
 
   const switchers = Array.from(
-    document.querySelectorAll<HTMLElement>("[data-version-switcher]")
+    document.querySelectorAll<HTMLElement>("[data-version-switcher]"),
   );
 
   switchers.forEach((container) => {
-    const select = container.querySelector<HTMLSelectElement>("[data-version-select]");
+    const select = container.querySelector<HTMLSelectElement>(
+      "[data-version-select]",
+    );
     if (!select) return;
 
     select.addEventListener("change", () => {
@@ -23,7 +25,9 @@ function initVersionSwitcher() {
 }
 
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initVersionSwitcher, { once: true });
+  document.addEventListener("DOMContentLoaded", initVersionSwitcher, {
+    once: true,
+  });
 } else {
   initVersionSwitcher();
 }

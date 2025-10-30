@@ -3,7 +3,9 @@ function copyButtonsInit() {
     return;
   }
 
-  const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>(".copy-button"));
+  const buttons = Array.from(
+    document.querySelectorAll<HTMLButtonElement>(".copy-button"),
+  );
   if (!buttons.length) {
     return;
   }
@@ -11,7 +13,8 @@ function copyButtonsInit() {
   buttons.forEach((button) => {
     button.addEventListener("click", async () => {
       const value = button.getAttribute("data-copy");
-      const status = button.closest<HTMLElement>(".copy-wrapper")?.nextElementSibling;
+      const status =
+        button.closest<HTMLElement>(".copy-wrapper")?.nextElementSibling;
       if (!value) return;
 
       try {
@@ -28,7 +31,7 @@ function copyButtonsInit() {
             status.textContent = "";
           }
         }, 2400);
-      } catch (error) {
+      } catch (_error) {
         if (status) {
           status.textContent = "Copy not permitted. Please copy manually.";
         }
@@ -38,7 +41,9 @@ function copyButtonsInit() {
 }
 
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", copyButtonsInit, { once: true });
+  document.addEventListener("DOMContentLoaded", copyButtonsInit, {
+    once: true,
+  });
 } else {
   copyButtonsInit();
 }
