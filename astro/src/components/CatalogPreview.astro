@@ -1,0 +1,36 @@
+---
+interface AppCard {
+  name: string;
+  status: string;
+  cves: number;
+}
+
+const { apps } = Astro.props as { apps: AppCard[] };
+---
+<section class="px-4 py-24 md:px-8">
+  <div class="mx-auto max-w-6xl">
+    <div class="mb-12 text-center">
+      <h2 class="text-3xl font-semibold text-white sm:text-4xl">Explore the <span class="gradient-text">Catalog</span></h2>
+      <p class="mt-4 text-lg text-[#979DAC]">Pre-secured application packages ready for disconnected deployment.</p>
+    </div>
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {apps.map((app) => (
+        <div class="rounded-xl border border-[#002855] bg-[#0A1A33]/70 p-6 text-center transition hover:-translate-y-2 hover:border-[#0466C8]">
+          <div class="mx-auto mb-4 flex size-14 items-center justify-center rounded-full bg-[#023E7D]/40 text-xl text-white">
+            📦
+          </div>
+          <h3 class="text-xl font-semibold text-white">{app.name}</h3>
+          <p class="mt-2 text-sm text-[#7D8597]">Secure status</p>
+          <span class:list={{
+            "mt-4 inline-flex items-center justify-center rounded-full px-3 py-1 text-xs font-semibold": true,
+            "bg-green-600/80 text-white": app.cves === 0,
+            "bg-amber-500/80 text-white": app.cves === 1,
+            "bg-red-600/80 text-white": app.cves > 1,
+          }}>
+            {app.status}
+          </span>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

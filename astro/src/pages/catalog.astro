@@ -1,0 +1,538 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { fetchCatalogData } from "../lib/catalog/data-source";
+import { mockCatalogResponse, sumSeverity } from "../lib/catalog/mock-data";
+import type { CatalogApp, SeveritySummary } from "../lib/catalog/types";
+
+const formatDate = (input: string) =>
+  new Date(input).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+
+const severityOrder = ["critical", "high", "medium", "low"] as const;
+const severityLabelMap: Record<(typeof severityOrder)[number], string> = {
+  critical: "Critical",
+  high: "High",
+  medium: "Medium",
+  low: "Low",
+};
+const severityColorMap: Record<(typeof severityOrder)[number], string> = {
+  critical: "#FF6B6B",
+  high: "#F59F00",
+  medium: "#FAB005",
+  low: "#4DABF7",
+};
+
+const catalogResult = await fetchCatalogData();
+const catalogResponse = catalogResult.response ?? mockCatalogResponse;
+const catalogApps = (catalogResponse.apps ?? []) as CatalogApp[];
+const totalPackages = catalogApps.length;
+const totalImages = catalogApps.reduce((acc, app) => acc + (app.imageCount ?? 0), 0);
+const ironBankCount = catalogApps.filter((app) => app.hasIronBank).length;
+const criticalWatch = catalogApps.filter((app) => (app.cves?.critical ?? 0) > 0).length;
+
+const lastUpdatedIso = catalogResponse.lastUpdated ?? new Date(catalogResult.fetchedAt).toISOString();
+const formattedLastUpdated = formatDate(lastUpdatedIso);
+
+const severityTotals = sumSeverity(catalogApps);
+const totalVulnerabilities = severityOrder.reduce((acc, key) => acc + (severityTotals[key] ?? 0), 0);
+const severityMax = Math.max(...severityOrder.map((key) => severityTotals[key] ?? 0), 1);
+const severitySeries = severityOrder.map((key) => ({
+  key,
+  label: severityLabelMap[key],
+  count: severityTotals[key] ?? 0,
+  width: Math.round(((severityTotals[key] ?? 0) / severityMax) * 100),
+  color: severityColorMap[key],
+}));
+
+const labelOptions = [
+  "all",
+  ...Array.from(new Set(catalogApps.flatMap((app) => app.labels ?? []))).sort((a, b) => a.localeCompare(b)),
+];
+
+const providerOptions: Array<{ value: string; label: string }> = [
+  { value: "all", label: "All providers" },
+  { value: "ironbank", label: "Iron Bank available" },
+  { value: "chainguard", label: "Chainguard available" },
+  { value: "vendor", label: "Vendor only" },
+];
+
+const mapAppToSearchText = (app: CatalogApp) =>
+  [app.name, app.summary, ...(app.labels ?? []), ...(app.providers ?? [])]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+
+const viewModels = catalogApps.map((app) => ({
+  id: app.id,
+  name: app.name,
+  summary: app.summary,
+  labels: app.labels ?? [],
+  providers: app.providers ?? [],
+  hasIronBank: app.hasIronBank,
+  hasChainguard: app.hasChainguard,
+  vendorOnly: app.providers?.length === 1 && app.providers[0] === "vendor",
+  imageCount: app.imageCount,
+  cves: app.cves,
+  latestVersion: app.latestVersion,
+  zarfPackage: app.zarfPackage,
+  links: app.links ?? {},
+  searchText: mapAppToSearchText(app),
+}));
+
+const sourceLabelMap = {
+  remote: "Live GitHub data",
+  cache: "Cached GitHub data",
+  mock: "Mock dataset",
+} as const;
+
+const catalogSourceLabel = sourceLabelMap[catalogResult.source] ?? "Unknown";
+
+const cveChartPayload = {
+  labels: severityOrder.map((key) => severityLabelMap[key]),
+  datasets: [
+    {
+      label: "Findings",
+      data: severityOrder.map((key) => severityTotals[key] ?? 0),
+      backgroundColor: severityOrder.map((key) => severityColorMap[key]),
+      borderWidth: 0,
+    },
+  ],
+};
+
+const severityToString = (severity: SeveritySummary | undefined) =>
+  severityOrder
+    .map((key) => severity?.[key] ?? 0)
+    .join(" / ");
+
+const serializeJson = (input: unknown) =>
+  JSON.stringify(input)
+    .replace(/</g, "\\u003c")
+    .replace(/>/g, "\\u003e")
+    .replace(/&/g, "\\u0026");
+---
+
+<BaseLayout
+  title="Catalog | d0s.dev"
+  description="Explore hardened application bundles ready for disconnected deployment."
+  current="catalog"
+>
+  <section class="relative overflow-hidden bg-[#001845] px-4 py-20 sm:px-6 lg:px-12">
+    <div
+      class="pointer-events-none absolute inset-0 scale-110 bg-[radial-gradient(circle_at_top,_rgba(4,102,200,0.28),_transparent_55%)]"
+      aria-hidden="true"
+    ></div>
+    <div class="relative mx-auto flex max-w-7xl flex-col gap-14 lg:flex-row lg:items-center">
+      <div class="max-w-3xl">
+        <p class="text-xs uppercase tracking-[0.3em] text-[#7C8AA5]">Disconnected catalog</p>
+        <h1 class="mt-4 text-4xl font-semibold text-white sm:text-5xl">
+          Deploy-ready bundles without an internet uplink
+        </h1>
+        <p class="mt-5 text-lg text-[#C0D0FF]/80">
+          Every package listed below is sourced from the d0s apps repository with signatures, SBOMs, and nightly CVE summaries so platform teams can promote trusted releases even when operating air-gapped.
+        </p>
+        <ul class="mt-6 space-y-3 text-sm text-[#9BA3B5]">
+          <li class="flex items-start gap-3">
+            <span class="mt-1 inline-block size-2 rounded-full bg-[#4DABF7]"></span>
+            Live data pull: <span class="font-medium text-white">{catalogSourceLabel}</span> refreshed {formattedLastUpdated}.
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="mt-1 inline-block size-2 rounded-full bg-[#F59F00]"></span>
+            Use the filters to target Iron Bank, Chainguard, or vendor-only bundles for the next promotion window.
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="mt-1 inline-block size-2 rounded-full bg-[#6BE09F]"></span>
+            Click "View manifest" on any card to inspect provider variants, versions, and image SBOM references.
+          </li>
+        </ul>
+        <div class="mt-8 flex flex-wrap items-center gap-4 text-sm text-[#9BA3B5]">
+          <span>
+            Showing <span class="font-semibold text-white" data-active-count>{totalPackages}</span> packages
+          </span>
+          <span aria-hidden="true" class="hidden text-[#5C677D] sm:inline">•</span>
+          <span>Total vulnerability findings: <span class="font-semibold text-white">{totalVulnerabilities}</span></span>
+        </div>
+      </div>
+      <div class="relative w-full max-w-xl rounded-3xl border border-[#023052] bg-[#001233]/80 p-8 shadow-[0_30px_80px_rgba(4,102,200,0.25)]">
+        <div class="absolute inset-x-6 top-6 rounded-full bg-[#023E7D]/40 px-4 py-1 text-xs uppercase tracking-[0.2em] text-[#9BA3B5]">
+          Offline validation recipe
+        </div>
+        <div class="mt-12 space-y-5 text-sm text-[#C0D0FF]/75">
+          <p>
+            <span class="font-semibold text-white">Before deploy:</span> pull the bundle, verify the cosign signature, and inspect the SBOM snapshot shipped alongside every Zarf package.
+          </p>
+          <p>
+            <span class="font-semibold text-white">During deploy:</span> the <code>d0s</code> CLI mirrors images locally and hydrates disconnected clusters without public registry calls.
+          </p>
+          <p>
+            <span class="font-semibold text-white">After deploy:</span> feed delta scan results back into the catalog repo so nightly automation can trend drift across environments.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="px-4 py-12 sm:px-6 lg:px-12">
+    <div class="mx-auto max-w-7xl space-y-10">
+      <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <article class="rounded-2xl border border-[#02224D] bg-[#001233] p-6 shadow-[0_18px_40px_rgba(4,102,200,0.2)]">
+          <h2 class="text-xs uppercase tracking-[0.2em] text-[#7C8AA5]">Packages tracked</h2>
+          <p class="mt-3 text-3xl font-semibold text-white">{totalPackages}</p>
+          <p class="mt-2 text-xs text-[#9BA3B5]">Directly sourced from d0s-dev/apps</p>
+        </article>
+        <article class="rounded-2xl border border-[#02224D] bg-[#001233] p-6 shadow-[0_18px_40px_rgba(4,102,200,0.2)]">
+          <h2 class="text-xs uppercase tracking-[0.2em] text-[#7C8AA5]">Images mirrored</h2>
+          <p class="mt-3 text-3xl font-semibold text-white">{totalImages}</p>
+          <p class="mt-2 text-xs text-[#9BA3B5]">Across all provider variants</p>
+        </article>
+        <article class="rounded-2xl border border-[#02224D] bg-[#001233] p-6 shadow-[0_18px_40px_rgba(4,102,200,0.2)]">
+          <h2 class="text-xs uppercase tracking-[0.2em] text-[#7C8AA5]">Iron Bank coverage</h2>
+          <p class="mt-3 text-3xl font-semibold text-white">{ironBankCount}</p>
+          <p class="mt-2 text-xs text-[#9BA3B5]">Bundles shipping hardened Iron Bank images</p>
+        </article>
+        <article class="rounded-2xl border border-[#02224D] bg-[#001233] p-6 shadow-[0_18px_40px_rgba(4,102,200,0.2)]">
+          <h2 class="text-xs uppercase tracking-[0.2em] text-[#7C8AA5]">Critical watchlist</h2>
+          <p class="mt-3 text-3xl font-semibold text-white">{criticalWatch}</p>
+          <p class="mt-2 text-xs text-[#9BA3B5]">Packages with outstanding critical CVEs</p>
+        </article>
+      </div>
+
+      <div class="grid gap-6 lg:grid-cols-[1.1fr,1fr]">
+        <div class="rounded-2xl border border-[#02224D] bg-[#001233] p-6">
+          <h3 class="text-lg font-semibold text-white">Vulnerability distribution</h3>
+          <p class="mt-1 text-sm text-[#9BA3B5]">
+            Parsed from the latest catalog snapshot. Hover or focus the chart to inspect counts by severity.
+          </p>
+          <div class="mt-6 grid gap-6 lg:grid-cols-[min(280px,_100%),1fr] lg:items-center">
+            <canvas class="max-w-[320px]" data-cve-chart aria-label="Catalog vulnerability distribution" role="img"></canvas>
+            <ul class="space-y-3 text-sm text-[#9BA3B5]">
+              {severitySeries.map((item) => (
+                <li class="flex items-center gap-3">
+                  <span class="inline-block size-3 rounded-full" style={`background: ${item.color};`} aria-hidden="true"></span>
+                  <span class="flex-1">{item.label}</span>
+                  <span class="font-semibold text-white">{item.count}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <p class="mt-6 text-xs text-[#5C677D]">
+            Source: GitHub Actions nightly scan outputs committed with the catalog JSON.
+          </p>
+        </div>
+
+        <div class="rounded-2xl border border-[#02224D] bg-[#001233] p-6">
+          <h3 class="text-lg font-semibold text-white">Disconnected rollout checklist</h3>
+          <ol class="mt-4 space-y-4 text-sm text-[#C0D0FF]/80">
+            <li>
+              <span class="font-semibold text-white">1. Sync the mirror.</span> Transfer the catalog repo via removable media and run <code>zarf package deploy</code> to hydrate the local registry cache.
+            </li>
+            <li>
+              <span class="font-semibold text-white">2. Verify integrity.</span> Run cosign against the <code>.sig</code> file and inspect SBOM manifests prior to promotion.
+            </li>
+            <li>
+              <span class="font-semibold text-white">3. Capture drift.</span> After deployment, export cluster scan data and open a pull request so nightly automation trends risk.
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="px-4 pb-20 sm:px-6 lg:px-12">
+    <div class="mx-auto max-w-7xl space-y-10">
+      <div class="rounded-2xl border border-[#02224D] bg-[#001233] p-6">
+        <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+          <div class="max-w-2xl">
+            <h2 class="text-lg font-semibold text-white">Filter packages</h2>
+            <p class="mt-1 text-sm text-[#9BA3B5]">
+              Search across labels, providers, and descriptions. Filters apply instantly without reloading the page.
+            </p>
+          </div>
+          <div class="flex w-full flex-col gap-6 lg:w-auto">
+            <label class="flex items-center gap-3 rounded-full border border-[#023052] bg-[#001845] px-4 py-2 text-sm text-[#9BA3B5] focus-within:border-[#0466C8] focus-within:text-white">
+              <svg aria-hidden="true" class="size-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.3-4.3"></path>
+              </svg>
+              <input
+                type="search"
+                placeholder="Search catalog..."
+                class="w-full bg-transparent text-sm text-white placeholder:text-[#5C677D] focus:outline-none"
+                data-filter-search
+              />
+            </label>
+            <div class="flex flex-wrap gap-3">
+              {labelOptions.map((value) => (
+                <button
+                  type="button"
+                  class="rounded-full border border-[#023052] bg-[#001845] px-4 py-1.5 text-xs font-medium text-[#9BA3B5] transition hover:border-[#0466C8] hover:text-white data-[active=true]:bg-[#023E7D] data-[active=true]:text-white"
+                  data-filter-label={value}
+                  data-active={value === "all" ? "true" : "false"}
+                  aria-pressed={value === "all" ? "true" : "false"}
+                >
+                  {value === "all" ? "All labels" : value}
+                </button>
+              ))}
+            </div>
+            <div class="flex flex-wrap gap-3">
+              {providerOptions.map((option) => (
+                <button
+                  type="button"
+                  class="rounded-full border border-[#023052] bg-[#001845] px-4 py-1.5 text-xs font-medium text-[#9BA3B5] transition hover:border-[#0466C8] hover:text-white data-[active=true]:bg-[#023E7D] data-[active=true]:text-white"
+                  data-filter-provider={option.value}
+                  data-active={option.value === "all" ? "true" : "false"}
+                  aria-pressed={option.value === "all" ? "true" : "false"}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-6">
+        <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3" data-catalog-grid>
+          {viewModels.map((pkg) => (
+            <article
+              role="button"
+              tabindex="0"
+              class="group relative flex h-full flex-col justify-between rounded-2xl border border-[#02224D] bg-[#001233] p-6 shadow-[0_18px_40px_rgba(2,62,125,0.2)] transition-transform duration-200 hover:-translate-y-1 hover:shadow-[0_24px_60px_rgba(4,102,200,0.25)] focus-visible:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0466C8]/70 active:translate-y-0.5 active:shadow-[0_12px_24px_rgba(4,102,200,0.25)]"
+              data-catalog-card
+              data-labels={pkg.labels.join(",")}
+              data-provider-list={pkg.providers.join(",")}
+              data-has-ironbank={pkg.hasIronBank ? "true" : "false"}
+              data-has-chainguard={pkg.hasChainguard ? "true" : "false"}
+              data-vendor-only={pkg.vendorOnly ? "true" : "false"}
+              data-search-text={pkg.searchText}
+              data-app-id={pkg.id}
+              data-app-name={pkg.name}
+            >
+              <header class="flex flex-col gap-3">
+                <div class="flex flex-wrap gap-2 text-xs uppercase tracking-[0.2em] text-[#5C677D]">
+                  {pkg.labels.length ? (
+                    pkg.labels.map((label) => (
+                      <span class="rounded-full border border-[#023052] bg-[#001845] px-3 py-1 text-[#7EA8FF]">
+                        {label}
+                      </span>
+                    ))
+                  ) : (
+                    <span class="text-[#5C677D]">unlabeled</span>
+                  )}
+                </div>
+                <div>
+                  <h3 class="text-xl font-semibold text-white">{pkg.name}</h3>
+                  <p class="mt-2 text-sm text-[#9BA3B5]">{pkg.summary}</p>
+                </div>
+              </header>
+
+              <div class="mt-6 flex flex-col gap-4 text-sm text-[#9BA3B5]">
+                <dl class="grid grid-cols-2 gap-4 text-xs uppercase tracking-[0.2em] text-[#5C677D]">
+                  <div class="space-y-2">
+                    <dt>Latest version</dt>
+                    <dd class="text-base normal-case text-white">{pkg.latestVersion}</dd>
+                  </div>
+                  <div class="space-y-2">
+                    <dt>Images</dt>
+                    <dd class="text-base normal-case text-white">{pkg.imageCount}</dd>
+                  </div>
+                </dl>
+                <div>
+                  <p class="text-xs uppercase tracking-[0.2em] text-[#5C677D]">Providers</p>
+                  <div class="mt-2 flex flex-wrap gap-2">
+                    {pkg.providers.map((provider) => (
+                      <span class="inline-flex items-center gap-2 rounded-full border border-[#023052] bg-[#001845] px-3 py-1 text-xs font-medium text-[#BBD0FF]">
+                        <span class="inline-block size-2 rounded-full" style={`background: ${provider === "ironbank" ? "#4CC9F0" : provider === "chainguard" ? "#B5179E" : "#7EA8FF"};`} aria-hidden="true"></span>
+                        {provider}
+                      </span>
+                    ))}
+                    {pkg.providers.length === 0 ? (
+                      <span class="inline-flex items-center rounded-full border border-[#023052] px-3 py-1 text-xs text-[#5C677D]">No providers listed</span>
+                    ) : null}
+                  </div>
+                </div>
+                <div>
+                  <p class="text-xs uppercase tracking-[0.2em] text-[#5C677D]">Vulnerability posture</p>
+                  <div class="mt-2 flex flex-wrap gap-2">
+                    {severityOrder.map((key) => (
+                      <span
+                        class="inline-flex items-center gap-2 rounded-full border border-[#023052] bg-[#001845] px-3 py-1 text-xs font-medium text-[#BBD0FF]"
+                        aria-label={`${severityLabelMap[key]} findings: ${pkg.cves?.[key] ?? 0}`}
+                      >
+                        <span class="inline-block size-2 rounded-full" style={`background: ${severityColorMap[key]};`} aria-hidden="true"></span>
+                        {pkg.cves?.[key] ?? 0} {severityLabelMap[key][0]}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <footer class="mt-6 flex flex-wrap items-center gap-3 border-t border-[#02224D] pt-5 text-sm">
+                {pkg.links.documentation ? (
+                  <a
+                    class="inline-flex items-center gap-2 rounded-full bg-[#023E7D] px-4 py-2 font-medium text-white transition hover:bg-[#0466C8]"
+                    href={pkg.links.documentation}
+                  >
+                    View docs
+                    <span aria-hidden="true">→</span>
+                  </a>
+                ) : null}
+                {pkg.links.git ? (
+                  <a
+                    class="inline-flex items-center gap-2 rounded-full border border-[#023052] px-4 py-2 font-medium text-[#9BA3B5] transition hover:border-[#0466C8] hover:text-white"
+                    href={pkg.links.git}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    Repository
+                    <span aria-hidden="true">↗</span>
+                  </a>
+                ) : null}
+                <div class="ml-auto flex items-center gap-2 text-xs font-medium text-[#7EA8FF] opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100">
+                  Open details
+                  <span aria-hidden="true">⇲</span>
+                </div>
+              </footer>
+            </article>
+          ))}
+        </div>
+        <div
+          class="hidden rounded-2xl border border-dashed border-[#023052] bg-[#001233] p-10 text-center text-sm text-[#9BA3B5]"
+          data-empty-state
+        >
+          No packages match the current filters. Reset the toggles to see the full catalog.
+        </div>
+      </div>
+
+      <script type="application/json" id="catalog-view-models" set:html={serializeJson(viewModels)}></script>
+
+      <div class="overflow-hidden rounded-2xl border border-[#02224D] bg-[#001233]">
+        <div class="border-b border-[#02224D] p-6">
+          <h2 class="text-lg font-semibold text-white">Offline readiness matrix</h2>
+          <p class="mt-1 text-sm text-[#9BA3B5]">
+            Snapshots catalog coverage for review packages and compliance audits.
+          </p>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-[#023052] text-left text-sm text-[#9BA3B5]">
+            <thead class="bg-[#001845] text-xs uppercase tracking-[0.2em] text-[#7C8AA5]">
+              <tr>
+                <th scope="col" class="px-6 py-4">Package</th>
+                <th scope="col" class="px-6 py-4">Latest version</th>
+                <th scope="col" class="px-6 py-4">Providers</th>
+                <th scope="col" class="px-6 py-4">Iron Bank</th>
+                <th scope="col" class="px-6 py-4">Chainguard</th>
+                <th scope="col" class="px-6 py-4">Images</th>
+                <th scope="col" class="px-6 py-4">Critical / High / Medium / Low</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[#02224D]">
+              {viewModels.map((pkg) => (
+                <tr class="transition hover:bg-[#01264D]">
+                  <td class="px-6 py-4 text-white">
+                    <div class="font-medium">{pkg.name}</div>
+                    <div class="text-xs text-[#5C677D]">{pkg.id}</div>
+                  </td>
+                  <td class="px-6 py-4">{pkg.latestVersion}</td>
+                  <td class="px-6 py-4">{pkg.providers.join(", ") || "—"}</td>
+                  <td class="px-6 py-4">{pkg.hasIronBank ? "Yes" : "No"}</td>
+                  <td class="px-6 py-4">{pkg.hasChainguard ? "Yes" : "No"}</td>
+                  <td class="px-6 py-4">{pkg.imageCount}</td>
+                  <td class="px-6 py-4 text-[#BBD0FF]">{severityToString(pkg.cves)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="fixed inset-0 z-50 hidden" data-manifest-overlay aria-hidden="true">
+    <div class="absolute inset-0 bg-[#000A1A]/70 backdrop-blur-sm transition-opacity" data-overlay-backdrop></div>
+    <div class="pointer-events-none absolute inset-0 flex items-center justify-center px-4 py-8">
+      <article
+        class="pointer-events-auto relative w-full max-w-5xl overflow-hidden rounded-3xl border border-[#023052] bg-[#001233] shadow-[0_40px_120px_rgba(2,62,125,0.45)] transition-transform duration-300"
+        data-overlay-panel
+      >
+        <header class="flex flex-col gap-6 border-b border-[#02224D] px-8 py-6 sm:flex-row sm:items-start sm:justify-between">
+          <div class="space-y-3">
+            <p class="text-xs uppercase tracking-[0.2em] text-[#5C677D]">Disconnected app</p>
+            <h3 class="text-2xl font-semibold text-white" data-overlay-title></h3>
+            <p class="max-w-2xl text-sm text-[#9BA3B5]" data-overlay-summary></p>
+            <div class="flex flex-wrap gap-2" data-overlay-labels></div>
+          </div>
+          <div class="flex flex-col items-start gap-3 text-xs text-[#5C677D] sm:items-end">
+            <span class="rounded-full border border-[#023052] px-3 py-1 text-xs font-medium text-[#9BA3B5]" data-overlay-source></span>
+            <span class="text-xs" data-overlay-updated></span>
+            <button type="button" class="rounded-full border border-[#023052] px-3 py-1 text-xs text-[#9BA3B5] transition hover:border-[#0466C8] hover:text-white" data-overlay-close>
+              Close
+            </button>
+          </div>
+        </header>
+
+        <section class="grid gap-4 border-b border-[#02224D] px-8 py-4 text-xs uppercase tracking-[0.2em] text-[#5C677D] sm:grid-cols-3">
+          <div class="space-y-1">
+            <p>Latest version</p>
+            <p class="text-base normal-case text-white" data-overlay-latest></p>
+          </div>
+          <div class="space-y-1">
+            <p>Images mirrored</p>
+            <p class="text-base normal-case text-white" data-overlay-images></p>
+          </div>
+          <div class="space-y-1">
+            <p>Providers</p>
+            <p class="text-base normal-case text-white" data-overlay-providers></p>
+          </div>
+        </section>
+
+        <div class="relative px-8 py-6">
+          <div class="flex flex-col items-center justify-center gap-4 py-24" data-overlay-loading>
+            <div class="size-12 rounded-full border-2 border-[#0466C8]/40 border-t-[#0466C8] animate-spin" aria-hidden="true"></div>
+            <p class="text-sm text-[#9BA3B5]" data-overlay-status>Loading manifest…</p>
+          </div>
+
+          <div class="hidden" data-overlay-error>
+            <div class="rounded-2xl border border-[#F59F00]/40 bg-[#2F1B00] px-6 py-4 text-sm text-[#FFD166]">
+              <p class="font-medium">Unable to load manifest</p>
+              <p class="mt-1 text-xs text-[#FFC46D]" data-overlay-error-message></p>
+            </div>
+          </div>
+
+          <div class="hidden space-y-6" data-overlay-content>
+            <div class="grid gap-4 md:grid-cols-2">
+              <label class="flex flex-col gap-2">
+                <span class="text-xs uppercase tracking-[0.2em] text-[#5C677D]">Provider</span>
+                <select class="rounded-xl border border-[#023052] bg-[#001845] px-4 py-2 text-sm text-white focus:border-[#0466C8] focus:outline-none" data-overlay-provider></select>
+              </label>
+              <label class="flex flex-col gap-2">
+                <span class="text-xs uppercase tracking-[0.2em] text-[#5C677D]">Version</span>
+                <select class="rounded-xl border border-[#023052] bg-[#001845] px-4 py-2 text-sm text-white focus:border-[#0466C8] focus:outline-none" data-overlay-version></select>
+              </label>
+            </div>
+
+            <div class="rounded-3xl border border-[#02224D] bg-[#001845]/60 p-5">
+              <div class="grid gap-6 lg:grid-cols-[minmax(240px,280px),1fr]">
+                <div class="space-y-2" data-overlay-image-list></div>
+                <div class="space-y-4">
+                  <div class="flex flex-wrap gap-2" role="tablist">
+                    <button type="button" class="rounded-full border border-[#023052] px-3 py-1 text-xs font-medium text-[#9BA3B5] transition data-[active=true]:bg-[#023E7D] data-[active=true]:text-white" data-overlay-tab="overview">Overview</button>
+                    <button type="button" class="rounded-full border border-[#023052] px-3 py-1 text-xs font-medium text-[#9BA3B5] transition data-[active=true]:bg-[#023E7D] data-[active=true]:text-white" data-overlay-tab="scans">Scans</button>
+                    <button type="button" class="rounded-full border border-[#023052] px-3 py-1 text-xs font-medium text-[#9BA3B5] transition data-[active=true]:bg-[#023E7D] data-[active=true]:text-white" data-overlay-tab="sboms">SBOMs</button>
+                  </div>
+                  <div class="min-h-[220px] space-y-4 text-sm text-[#9BA3B5]" data-overlay-tab-content></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <script type="application/json" id="catalog-cve-data" set:html={serializeJson(cveChartPayload)}></script>
+
+  <script type="module" src="/catalog-page.js"></script>
+</BaseLayout>

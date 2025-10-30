@@ -1,23 +1,21 @@
-name: Deploy to GitHub Pages
+name: Quality Gate
 
 on:
   push:
     branches:
-      - main
-  workflow_dispatch:
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
+      - alpha-release
+    paths:
+      - 'site/astro/**'
+      - 'site/.github/workflows/**'
+  pull_request:
+    paths:
+      - 'site/astro/**'
+      - 'site/.github/workflows/**'
 
 jobs:
-  build:
+  validate:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -41,26 +39,10 @@ jobs:
         working-directory: site/astro
         run: npm run check
 
-      - name: Run tests
+      - name: Unit tests
         working-directory: site/astro
         run: npm run test -- --run
 
-      - name: Build
+      - name: Audit dependencies
         working-directory: site/astro
-        run: npm run build
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: site/astro/dist
-
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+        run: npm audit --omit=dev --audit-level=moderate

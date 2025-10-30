@@ -1,0 +1,64 @@
+---
+import { randomUUID } from "node:crypto";
+
+interface Command {
+  input: string;
+  output: string;
+}
+
+interface Props {
+  commands?: Command[];
+  loop?: boolean;
+  className?: string;
+}
+
+const {
+  commands = [
+    { input: "d0s init k3s", output: "[✓] Cluster ready" },
+    { input: "d0s deploy nginx --offline", output: "🚀 Live in 10s | Secure Bundle Locked" },
+    { input: "d0s scan --sbom", output: "✓ All packages verified | 0 CVEs detected" },
+  ],
+  loop = true,
+  className = "",
+} = Astro.props as Props;
+
+const terminalId = randomUUID();
+---
+<div
+  class={`terminal-window ${className}`.trim()}
+  data-terminal-id={terminalId}
+  data-terminal-commands={JSON.stringify(commands)}
+  data-terminal-loop={loop ? "true" : "false"}
+>
+  <div class="terminal-header">
+    <div class="terminal-dot" style="background: #023E7D"></div>
+    <div class="terminal-dot" style="background: #0353A4"></div>
+    <div class="terminal-dot" style="background: #0466C8"></div>
+    <span class="ml-2 font-mono text-sm text-[#7D8597]">d0s-terminal</span>
+  </div>
+  <div class="terminal-body min-h-[200px]">
+    <div class="terminal-log space-y-3"></div>
+    <div class="terminal-current mt-3 flex items-center gap-2">
+      <span class="text-[#0466C8]">$</span>
+      <span class="current-input font-mono text-white"></span>
+      <span class="cursor"></span>
+    </div>
+    <div class="terminal-output ml-6 mt-2 text-[#979DAC]"></div>
+  </div>
+</div>
+<style>
+  .terminal-output.fade-in {
+    animation: terminalFade 0.3s ease forwards;
+  }
+
+  @keyframes terminalFade {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>

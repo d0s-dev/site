@@ -1,0 +1,46 @@
+---
+import Navigation from "../components/Navigation.astro";
+import Footer from "../components/Footer.astro";
+import "../styles/global.css";
+import macTerminalScript from "../scripts/mac-terminal.ts?url";
+
+interface Props {
+  title?: string;
+  description?: string;
+  current?: "home" | "docs" | "catalog";
+  showNav?: boolean;
+  showFooter?: boolean;
+}
+
+const {
+  title = "d0s.dev — Disconnected Operations System",
+  description = "Deploy Kubernetes workloads securely in disconnected environments with d0s.",
+  current = "home",
+  showNav = true,
+  showFooter = true,
+} = Astro.props as Props;
+
+---
+<!DOCTYPE html>
+<html lang="en" class="bg-background text-foreground">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="min-h-screen bg-background font-sans text-foreground">
+    {showNav && <Navigation current={current} />}
+    <main class:list={{ "pt-24": showNav, "pt-0": !showNav }}>
+      <slot />
+    </main>
+    {showFooter && <Footer />}
+    <script type="module" src={macTerminalScript}></script>
+  </body>
+</html>

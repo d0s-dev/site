@@ -1,0 +1,47 @@
+---
+title: "Catalog Consumption"
+description: "How to source, verify, and deploy packages from the d0s catalog."
+sidebar:
+  label: "Catalog"
+  order: 3
+---
+
+import VersionSwitcher from "../../../components/docs/VersionSwitcher.astro";
+
+## Catalog Snapshot
+
+The catalog exposes a curated collection of hardened application bundles. Each package ships with:
+
+- Signed archives compatible with air-gapped transport.
+- CVE metadata generated during nightly scans.
+
+<VersionSwitcher alignment="left" />
+- Component provenance via SBOM exports.
+
+The Astro `/catalog` route renders this data for at-a-glance awareness. During early development the grid is populated with representative mock data; a real API integration will land in Phase 2 when the GitHub source of truth is wired in.
+
+## Verifying Packages
+
+1. Download the desired tarball from the catalog or synchronize the git repository offline.
+2. Verify the detached signature:
+
+   ```bash
+   cosign verify-blob --key cosign.pub --signature <package>.sig <package>.tar.zst
+   ```
+
+3. Inspect the SBOM (CycloneDX) and scan report before promoting to production.
+
+## Deploying a Bundle
+
+Once validated, deploy from the CLI:
+
+```bash
+d0s deploy ./packages/keycloak
+```
+
+The CLI automatically detects whether it is connected or running in a fully disconnected environment and adjusts the workflow accordingly.
+
+## Next Steps
+
+- Phase 2 will introduce live data hydration using GitHub APIs and ETag-aware caching.
+- Watch `/catalog` for charting and advanced filtering once connected to production telemetry.

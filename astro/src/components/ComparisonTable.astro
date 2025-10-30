@@ -1,0 +1,50 @@
+---
+interface ComparisonRow {
+  feature: string;
+  d0s: string | boolean;
+  manual: string | boolean;
+  bigbang: string | boolean;
+  cnoe: string | boolean;
+}
+
+const { rows } = Astro.props as { rows: ComparisonRow[] };
+
+const format = (value: string | boolean) => {
+  if (typeof value === "boolean") {
+    return value ? "✔" : "✘";
+  }
+  return value;
+};
+---
+<section class="bg-[#0A1730]/80 px-4 py-24 md:px-8">
+  <div class="mx-auto max-w-5xl">
+    <div class="mb-12 text-center">
+      <h2 class="text-3xl font-semibold text-white sm:text-4xl">d0s vs. The Rest</h2>
+      <p class="mt-4 text-lg text-[#979DAC]">Why operators pick d0s for disconnected Kubernetes.</p>
+    </div>
+    <div class="overflow-x-auto rounded-xl border border-[#002855] bg-[#001233]/70">
+      <table class="w-full min-w-[640px] border-collapse text-sm">
+        <thead>
+          <tr class="border-b border-[#002855] text-left text-[#AAB6C8]">
+            <th class="px-4 py-3 font-medium">Feature</th>
+            <th class="px-4 py-3 text-center font-medium text-[#46A5FF]">d0s</th>
+            <th class="px-4 py-3 text-center font-medium">Manual</th>
+            <th class="px-4 py-3 text-center font-medium">BigBang</th>
+            <th class="px-4 py-3 text-center font-medium">CNOE</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => (
+            <tr class="border-b border-[#002855]/60 bg-[#001233]/40 transition-colors hover:bg-[#001C3D]/60">
+              <td class="px-4 py-3 text-white">{row.feature}</td>
+              <td class="px-4 py-3 text-center font-mono text-[#46A5FF]">{format(row.d0s)}</td>
+              <td class="px-4 py-3 text-center font-mono text-[#7D8597]">{format(row.manual)}</td>
+              <td class="px-4 py-3 text-center font-mono text-[#7D8597]">{format(row.bigbang)}</td>
+              <td class="px-4 py-3 text-center font-mono text-[#7D8597]">{format(row.cnoe)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

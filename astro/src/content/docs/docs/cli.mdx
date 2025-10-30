@@ -1,0 +1,36 @@
+---
+title: "CLI Quickstart"
+description: "Install and run the d0s CLI to bootstrap secure clusters."
+sidebar:
+  label: "CLI Quickstart"
+---
+
+import VersionSwitcher from "../../../components/docs/VersionSwitcher.astro";
+
+<VersionSwitcher alignment="left" />
+
+## Installation
+
+To install the CLI on a workstation with network access, run:
+
+```bash
+curl -sSL https://d0s.dev/install | sh
+```
+
+For air-gapped environments, download the installer bundle from the catalog and transfer it via removable media. Verify signatures with `cosign` before running the installer script.
+
+## Bootstrap a Cluster
+
+Once the CLI is installed, authenticate against the target kubeconfig and bootstrap the baseline stack:
+
+```bash
+d0s init --profile edge
+```
+
+This provisions the core platform services, applies security baselines, and prepares the cluster for catalog deployments.
+
+## Next Steps
+
+- Use `d0s catalog list` to inspect available secure application bundles.
+- Apply a package with `d0s deploy <package>`.
+- Visit the Headlamp UI at the route exposed during `d0s init` to monitor cluster health.

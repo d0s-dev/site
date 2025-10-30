@@ -1,0 +1,20 @@
+---
+interface Stat {
+  value: string;
+  label: string;
+}
+
+const { stats } = Astro.props as { stats: Stat[] };
+---
+<section class="px-4 py-24 md:px-8">
+  <div class="mx-auto max-w-5xl">
+    <div class="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
+      {stats.map((stat) => (
+        <div class="rounded-xl border border-[#002855] bg-[#0A1A33]/70 p-6 text-center">
+          <p class="text-3xl font-semibold text-white sm:text-4xl">{stat.value}</p>
+          <p class="mt-2 text-sm uppercase tracking-wide text-[#7D8597]">{stat.label}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

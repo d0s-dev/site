@@ -1,0 +1,29 @@
+---
+import versionSwitcherScript from "../../scripts/version-switcher.ts?url";
+
+interface Props {
+  alignment?: "left" | "right";
+}
+
+const { alignment = "right" } = Astro.props as Props;
+---
+<div
+  class={`flex flex-wrap items-center gap-3 rounded-2xl border border-[#023052] bg-[#001845] px-4 py-2 text-sm text-[#9BA3B5] ${alignment === "left" ? "justify-start" : "justify-end"}`.trim()}
+  data-version-switcher
+>
+  <label class="flex items-center gap-2">
+    <span class="text-xs uppercase tracking-[0.2em] text-[#5C677D]">Docs version</span>
+    <select
+      class="rounded-full border border-[#023052] bg-[#001233] px-3 py-1 text-sm text-white focus:border-[#0466C8] focus:outline-none"
+      data-version-select
+      aria-label="Choose documentation version"
+    >
+      <option value="current">Latest (Astro)</option>
+      <option value="https://github.com/d0s-dev/docs/tree/main/releases/2024.10">Legacy 2024.10 (React)</option>
+    </select>
+  </label>
+  <p class="text-xs text-[#5C677D]">
+    Legacy docs open in a new tab. Bookmark the Astro version for future updates.
+  </p>
+</div>
+<script type="module" src={versionSwitcherScript}></script>

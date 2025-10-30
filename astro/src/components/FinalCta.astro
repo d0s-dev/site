@@ -1,0 +1,32 @@
+---
+import MacTerminal from "./MacTerminal.astro";
+
+const { installScript } = Astro.props as { installScript: string };
+---
+<section class="relative overflow-hidden px-4 py-32 md:px-8" style="background: linear-gradient(135deg, #0466C8 0%, #023E7D 50%, #0353A4 100%);">
+  <div class="relative z-10 mx-auto max-w-4xl text-center text-white">
+    <h2 class="text-3xl font-semibold sm:text-5xl">Unlock Your First Cube</h2>
+    <p class="mx-auto mt-4 max-w-2xl text-lg text-white/80">
+      Install the CLI and deploy your first disconnected workload in minutes.
+    </p>
+    <div class="mx-auto mt-10 max-w-2xl rounded-xl border border-white/20 bg-[#001233]/80 p-6 backdrop-blur">
+      <div class="copy-wrapper flex flex-col gap-4 sm:flex-row sm:items-center">
+        <code class="flex-1 truncate font-mono text-left text-[#46A5FF]">{installScript}</code>
+        <button class="copy-button inline-flex items-center gap-2 rounded-md border border-[#0466C8] px-4 py-2 text-sm font-medium text-[#0466C8] transition hover:bg-[#0466C8] hover:text-white" data-copy={installScript} type="button">
+          Copy
+        </button>
+      </div>
+      <p class="copy-status mt-2 h-5 text-left text-sm text-[#AAB6C8]" aria-live="polite"></p>
+    </div>
+    <div class="mt-10">
+      <MacTerminal
+        commands={[
+          { input: installScript, output: "✓ d0s installed successfully" },
+          { input: "d0s --version", output: "d0s v1.0.0" },
+          { input: "d0s init", output: "🚀 Ready to deploy!" },
+        ]}
+      />
+    </div>
+  </div>
+  <div class="absolute inset-0 opacity-40" style="background: radial-gradient(circle at 30% 50%, rgba(255,255,255,0.18) 0%, transparent 60%);"></div>
+</section>
