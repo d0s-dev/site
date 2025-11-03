@@ -1,58 +1,67 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@custom-variant dark (&:is(.dark *));
-
 :root {
   --font-size: 16px;
-  
-  /* d0s.dev Dark Mode Color System - Modal-Inspired */
-  --background: #001233;
-  --foreground: #979DAC;
-  --card: #33415C;
-  --card-surface: #5C677D;
+
+  /* Core palette tokens */
+  --blue-100: #0466C8;
+  --blue-200: #0353A4;
+  --blue-300: #023E7D;
+  --blue-400: #002855;
+  --blue-500: #001845;
+  --gray-100: #979DAC;
+  --gray-200: #7D8597;
+  --gray-300: #5C677D;
+  --gray-400: #33415C;
+  --gray-500: #001233;
+
+  /* Semantic tokens */
+  --background: var(--gray-500);
+  --foreground: var(--gray-100);
+  --card: var(--gray-400);
+  --card-surface: var(--gray-300);
   --card-foreground: #ffffff;
-  --popover: #33415C;
+  --popover: var(--gray-400);
   --popover-foreground: #ffffff;
-  --primary: #0466C8;
-  --primary-deep: #023E7D;
-  --primary-mid: #0353A4;
+  --primary: var(--blue-100);
+  --primary-deep: var(--blue-300);
+  --primary-mid: var(--blue-200);
   --primary-foreground: #ffffff;
-  --secondary: #33415C;
-  --secondary-foreground: #979DAC;
-  --muted: #5C677D;
-  --muted-foreground: #7D8597;
-  --accent: #0466C8;
+  --secondary: var(--gray-400);
+  --secondary-foreground: var(--gray-100);
+  --muted: var(--gray-300);
+  --muted-foreground: var(--gray-200);
+  --accent: var(--blue-100);
   --accent-foreground: #ffffff;
   --destructive: #ff4444;
   --destructive-foreground: #ffffff;
-  --border: #002855;
-  --input: rgba(255, 255, 255, 0.1);
-  --input-background: #33415C;
-  --switch-background: #33415C;
+  --border: var(--blue-400);
+  --input: rgba(255, 255, 255, 0.08);
+  --input-background: var(--gray-400);
+  --switch-background: var(--gray-400);
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --ring: #0466C8;
-  --chart-1: #0466C8;
-  --chart-2: #0353A4;
-  --chart-3: #023E7D;
-  --chart-4: #001845;
-  --chart-5: #002855;
+  --ring: var(--blue-100);
+  --chart-1: var(--blue-100);
+  --chart-2: var(--blue-200);
+  --chart-3: var(--blue-300);
+  --chart-4: var(--blue-500);
+  --chart-5: var(--blue-400);
   --radius: 0.75rem;
-  --sidebar: #001233;
-  --sidebar-foreground: #979DAC;
-  --sidebar-primary: #0466C8;
+  --sidebar: var(--gray-500);
+  --sidebar-foreground: var(--gray-100);
+  --sidebar-primary: var(--blue-100);
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #33415C;
+  --sidebar-accent: var(--gray-400);
   --sidebar-accent-foreground: #ffffff;
-  --sidebar-border: #002855;
-  --sidebar-ring: #0466C8;
-  
-  /* Gradient */
-  --gradient-primary: linear-gradient(135deg, #0466C8 0%, #023E7D 50%, #0353A4 100%);
-  --gradient-glow: linear-gradient(135deg, rgba(4, 102, 200, 0.3) 0%, rgba(2, 62, 125, 0.3) 100%);
-  
+  --sidebar-border: var(--blue-400);
+  --sidebar-ring: var(--blue-100);
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, var(--blue-100) 0%, var(--blue-300) 50%, var(--blue-200) 100%);
+  --gradient-glow: linear-gradient(135deg, color-mix(in srgb, var(--blue-100) 35%, transparent) 0%, color-mix(in srgb, var(--blue-300) 35%, transparent) 100%);
+
   /* Custom sizes */
   --text-6xl: 6rem;
   --text-2-5xl: 2.5rem;
@@ -77,20 +86,20 @@
   --destructive-foreground: oklch(0.637 0.237 25.331);
   --border: oklch(0.269 0 0);
   --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+  --ring: color-mix(in srgb, var(--blue-100) 60%, transparent);
+  --chart-1: var(--blue-100);
+  --chart-2: var(--blue-200);
+  --chart-3: var(--blue-300);
+  --chart-4: var(--blue-500);
+  --chart-5: var(--blue-400);
+  --sidebar: var(--gray-500);
+  --sidebar-foreground: var(--gray-100);
+  --sidebar-primary: var(--blue-100);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--gray-400);
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: var(--blue-400);
+  --sidebar-ring: color-mix(in srgb, var(--blue-100) 60%, transparent);
   --font-weight-medium: 500;
   --font-weight-normal: 400;
 }
@@ -271,7 +280,7 @@ html {
   position: absolute;
   width: 100px;
   height: 100px;
-  background: linear-gradient(135deg, #0466C8 0%, #023E7D 100%);
+  background: linear-gradient(135deg, var(--blue-100) 0%, var(--blue-300) 100%);
   border: 2px solid rgba(255, 255, 255, 0.2);
   display: flex;
   align-items: center;
@@ -288,19 +297,23 @@ html {
 
 /* Terminal Styles */
 .terminal-window {
-  background: #001233;
+  background: var(--gray-500);
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  display: block;
+  width: 100%;
+  max-width: 28rem;
+  min-width: 0;
 }
 
 .terminal-header {
-  background: linear-gradient(to bottom, #33415C, #2a3548);
+  background: linear-gradient(to bottom, var(--gray-400), color-mix(in srgb, var(--gray-500) 80%, transparent));
   padding: 12px 16px;
   display: flex;
   align-items: center;
   gap: 8px;
-  border-bottom: 1px solid #002855;
+  border-bottom: 1px solid var(--blue-400);
 }
 
 .terminal-dot {
@@ -309,19 +322,59 @@ html {
   border-radius: 50%;
 }
 
+.terminal-dot--deep {
+  background: color-mix(in srgb, var(--blue-300) 70%, black 10%);
+}
+
+.terminal-dot--primary {
+  background: var(--blue-300);
+}
+
+.terminal-dot--accent {
+  background: var(--blue-100);
+}
+
 .terminal-body {
-  padding: 20px;
+  padding: 24px;
   font-family: 'JetBrains Mono', monospace;
   font-size: 14px;
   line-height: 1.6;
-  color: #979DAC;
+  color: var(--gray-100);
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.terminal-log {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-height: 3.5rem;
+}
+
+.terminal-current {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 1.5rem;
+}
+
+.terminal-current .current-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.terminal-output {
+  color: color-mix(in srgb, var(--gray-200) 85%, white 15%);
+  opacity: 0;
 }
 
 .cursor {
   display: inline-block;
   width: 8px;
   height: 16px;
-  background: #0466C8;
+  background: var(--blue-100);
   animation: blink 1s infinite;
 }
 
@@ -332,7 +385,7 @@ html {
 
 /* Gradient Text */
 .gradient-text {
-  background: linear-gradient(135deg, #0466C8 0%, #023E7D 50%, #0353A4 100%);
+  background: linear-gradient(135deg, var(--blue-100) 0%, var(--blue-300) 50%, var(--blue-200) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -340,9 +393,43 @@ html {
 
 /* Glow Effect */
 .glow {
-  box-shadow: 0 0 20px rgba(4, 102, 200, 0.3);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--blue-100) 35%, transparent);
 }
 
 .glow:hover {
-  box-shadow: 0 0 40px rgba(4, 102, 200, 0.6);
+  box-shadow:
+    0 0 40px color-mix(in srgb, var(--blue-100) 50%, transparent),
+    0 0 60px color-mix(in srgb, var(--blue-100) 35%, transparent);
+}
+
+/* ASCII Logo */
+.ascii-logo {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  white-space: pre;
+  letter-spacing: 0.08em;
+  line-height: 0.65rem;
+  font-size: 0.6rem;
+  color: var(--blue-200);
+  transition: color 180ms ease, text-shadow 180ms ease, transform 180ms ease;
+}
+
+.ascii-logo--compact {
+  font-size: 0.45rem;
+  line-height: 0.45rem;
+}
+
+.ascii-logo--hero {
+  font-size: 0.95rem;
+  line-height: 0.9rem;
+}
+
+.ascii-logo:hover,
+a:hover .ascii-logo,
+.group:hover .ascii-logo,
+a:focus-visible .ascii-logo,
+.group:focus-visible .ascii-logo {
+  color: var(--blue-100);
+  text-shadow: 0 0 18px color-mix(in srgb, var(--blue-100) 55%, transparent);
+  transform: translateY(-1px);
 }

@@ -15,6 +15,9 @@ export default defineConfig({
       description:
         "Operator-first guides for deploying and maintaining the d0s platform in connected and disconnected environments.",
       disable404Route: true,
+      components: {
+        Header: './src/components/starlight/Header.astro',
+      },
       sidebar: [
         {
           label: "Overview",

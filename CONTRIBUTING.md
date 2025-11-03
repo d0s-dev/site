@@ -7,7 +7,7 @@ Thank you for your interest in contributing to the d0s.dev website! This documen
 1. **Fork and clone the repository**
    ```bash
    git clone git@github.com:YOUR_USERNAME/site.git
-   cd site
+   cd site/astro
    ```
 
 2. **Install dependencies**
@@ -21,81 +21,81 @@ Thank you for your interest in contributing to the d0s.dev website! This documen
    ```
 
 4. **Open your browser**
-   Navigate to `http://localhost:5173`
+   Navigate to `http://localhost:4321`
 
 ## 📁 Project Structure
 
 ```
-src/
-├── components/          # React components
-│   ├── ui/             # Reusable UI components (shadcn/ui)
-│   ├── LandingPage.tsx # Home page
-│   ├── DocsPage.tsx    # Documentation page
-│   ├── CatalogPage.tsx # App catalog
-│   └── HeadlampPage.tsx # Headlamp integration showcase
-├── styles/             # Global styles
-├── App.tsx             # Main application
-└── main.tsx            # Entry point
+astro/
+├── public/                 # Static assets and compiled bundles
+├── src/
+│   ├── components/         # Astro components and interactive islands
+│   ├── content/            # Starlight documentation content collections
+│   ├── layouts/            # Shared page layouts
+│   ├── lib/                # Catalog data sources and utilities
+│   ├── pages/              # Route pages and API endpoints (serverless)
+│   ├── scripts/            # Client-side TypeScript bundles
+│   └── styles/             # Global CSS and Tailwind layers
+├── scripts/                # Build-time helpers (e.g., docs sync)
+├── astro.config.mjs        # Astro configuration
+├── tailwind.config.mjs     # Tailwind setup and presets
+└── package.json            # Dependencies and scripts
 ```
 
 ## 🎨 Design System
 
 This site uses:
-- **Tailwind CSS** for styling
-- **Radix UI** for accessible components
-- **Framer Motion** for animations
-- **shadcn/ui** component patterns
+- **Tailwind CSS** for utility-first styling
+- **Astro islands** pattern for interactive components
+- **Starlight** for documentation authoring and navigation
+- **Chart.js** for catalog visualizations
 
 ### Color Palette
 
-The d0s.dev design uses a dark, modal-inspired color scheme:
+The refreshed color system is based on two tonal ramps:
 
 ```css
---background: #001233     /* Deep navy blue */
---foreground: #979DAC     /* Light gray text */
---primary: #0466C8        /* Bright blue */
---card: #33415C           /* Card background */
---border: #002855         /* Subtle borders */
+/* Blues (light → dark) */
+--blue-100: #0466C8;
+--blue-200: #0353A4;
+--blue-300: #023E7D;
+--blue-400: #002855;
+--blue-500: #001845;
+
+/* Grays (light → dark) */
+--gray-100: #979DAC;
+--gray-200: #7D8597;
+--gray-300: #5C677D;
+--gray-400: #33415C;
+--gray-500: #001233;
 ```
 
 ## 🛠️ Development Guidelines
 
-### Adding New Components
+### Astro Components & Content
 
-1. Create your component in `src/components/`
-2. Use TypeScript for type safety
-3. Follow the existing naming conventions
-4. Import UI components from `@/components/ui`
-
-Example:
-```tsx
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-
-export function MyComponent() {
-  return (
-    <Card className="p-6">
-      <Button>Click me</Button>
-    </Card>
-  )
-}
-```
+1. Place new UI components in `src/components/`; prefer `.astro` files unless interactivity requires `.tsx` islands.
+2. Store shared data helpers in `src/lib/` and keep them framework-agnostic.
+3. Author documentation in `src/content/docs/` using MDX; update frontmatter for navigation.
+4. For client-side scripts, bundle via `src/scripts/` and wire them up in `scripts/sync-docs.mjs` if needed.
 
 ### Styling Guidelines
 
-1. Use Tailwind utility classes first
-2. Use CSS variables for theme colors
-3. Keep animations smooth and purposeful
-4. Ensure responsive design (mobile-first)
+1. Favor Tailwind utility classes and the color tokens above.
+2. Extend Tailwind primitives in `tailwind.config.mjs` instead of ad hoc CSS when possible.
+3. Keep animations purposeful and accessible; honor reduced-motion preferences.
+4. Test across breakpoints—Astro layouts default to mobile-first.
 
 ### Code Quality
 
-- Run the build before committing: `npm run build`
-- Use meaningful commit messages
-- Keep components small and focused
-- Comment complex logic
+- Run `npm run lint` and `npm run check` before opening a PR.
+- Execute `npm run test` for unit coverage of catalog data helpers.
+- Ensure `npm run build` completes locally.
+- Use meaningful commit messages and comment only where intent is non-obvious.
 
 ## 📦 Building and Testing
+
+Run all commands from the `astro/` directory.
 
 ### Local Development
 ```bash
@@ -110,6 +110,13 @@ npm run build
 ### Preview Production Build
 ```bash
 npm run preview
+```
+
+### Quality Checks
+```bash
+npm run check     # Astro + TypeScript diagnostics
+npm run lint      # Biome formatting and lint rules
+npm run test      # Vitest unit tests
 ```
 
 ## 🚢 Deployment

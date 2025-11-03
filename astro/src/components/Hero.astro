@@ -20,52 +20,54 @@ const { terminalCommands = defaultCommands } = Astro.props as Props;
 ---
 <section class="relative flex min-h-[90vh] items-center overflow-hidden px-4 py-24 md:px-8">
   <div class="absolute inset-0">
-    <div class="absolute inset-0" style="background: radial-gradient(circle at 50% 50%, rgba(4,102,200,0.12) 0%, transparent 55%);"></div>
-    <div class="animate-pulse-slow absolute -top-32 right-[-20%] size-[480px] rounded-full bg-[#0466C8]/20 blur-3xl"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_color-mix(in_srgb,var(--blue-100)_22%,_transparent)_0%,_transparent_58%)]"></div>
+    <div class="animate-pulse-slow absolute -top-32 right-[-20%] size-[480px] rounded-full bg-brand-blue-500/20 blur-3xl"></div>
   </div>
   <div class="relative z-10 mx-auto grid max-w-6xl items-center gap-16 lg:grid-cols-2">
-    <div class="space-y-8 text-center lg:text-left">
+  <div class="space-y-8 text-center lg:text-left">
+      <span class="inline-flex items-center gap-2 rounded-full border border-brand-blue-300 bg-brand-blue-500/30 px-4 py-1 text-xs font-semibold uppercase tracking-[0.35em] text-brand-gray-100">
+        Offline-first toolkit
+      </span>
       <h1 class="text-4xl font-bold text-white sm:text-6xl lg:text-7xl" style="font-family: 'JetBrains Mono', monospace;">
         Deploy <span class="gradient-text">Secure</span>
       </h1>
-      <p class="text-xl text-[#C0CAD8] sm:text-2xl">
-        1-Click Kubernetes deploys. Laptop → DoD air-gapped in minutes.
+      <p class="text-xl text-brand-gray-100/85 sm:text-2xl">
+        Bundle, mirror, and continuously verify mission-critical workloads with cosigned artifacts, curated registries, and SBOM insight engineered for denied, disrupted, intermittent, and limited networks.
       </p>
       <div class="flex flex-wrap justify-center gap-4 lg:justify-start">
         <a
-          class="group relative inline-flex items-center gap-2 rounded-md px-6 py-3 text-white shadow-lg transition-transform hover:-translate-y-1"
-          href="/docs/cli"
-          style="background: linear-gradient(135deg, #0466C8 0%, #023E7D 50%, #0353A4 100%);"
+          class="group relative inline-flex items-center gap-2 rounded-md bg-gradient-to-r from-brand-blue-100 via-brand-blue-200 to-brand-blue-300 px-6 py-3 text-white shadow-[0_25px_80px_rgba(3,83,164,0.35)] transition-transform hover:-translate-y-1"
+          href="/docs/cli/quickstart"
         >
-          <span class="relative">Get CLI</span>
+          <span class="relative">Read the quickstart</span>
         </a>
         <a
-          class="inline-flex items-center gap-2 rounded-md border border-[#0466C8] px-6 py-3 text-[#0466C8] transition hover:bg-[#0466C8] hover:text-white"
+          class="inline-flex items-center gap-2 rounded-md border border-brand-blue-200 px-6 py-3 text-brand-blue-100 transition hover:bg-brand-blue-200 hover:text-white"
           href="/catalog"
         >
-          Deploy First Cube
+          Browse the catalog
         </a>
       </div>
-      <div class="flex flex-wrap justify-center gap-3 text-sm text-[#7D8597] lg:justify-start">
-        <span class="inline-flex items-center gap-2 rounded-full border border-[#023E7D] bg-[#002855]/60 px-3 py-1 text-white">
+      <div class="flex flex-wrap justify-center gap-3 text-sm text-brand-gray-200 lg:justify-start">
+        <span class="inline-flex items-center gap-2 rounded-full border border-brand-blue-300 bg-brand-blue-500/35 px-3 py-1 text-white">
           <svg aria-hidden="true" class="size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
             <path d="m9.5 9 2.5 2 2.5-2" />
           </svg>
-          DoD Compliant
+          DoD ready path
         </span>
-        <span class="inline-flex items-center gap-2 rounded-full border border-[#0466C8]/40 bg-[#001233]/60 px-3 py-1 text-white">
-          <span class="text-primary">⚡</span>
-          20Mi Footprint
+        <span class="inline-flex items-center gap-2 rounded-full border border-brand-blue-300 bg-brand-blue-500/35 px-3 py-1 text-white">
+          <span aria-hidden="true">⚡</span>
+          20Mi footprint
         </span>
-        <span class="inline-flex items-center gap-2 rounded-full border border-[#0466C8]/40 bg-[#001233]/60 px-3 py-1 text-white">
-          <span class="text-primary">📦</span>
-          Zarf Ready
+        <span class="inline-flex items-center gap-2 rounded-full border border-brand-blue-300 bg-brand-blue-500/35 px-3 py-1 text-white">
+          <span aria-hidden="true">📦</span>
+          Zarf-native bundles
         </span>
       </div>
     </div>
-    <div class="relative mx-auto flex max-w-md flex-col gap-6">
-      <MacTerminal className="shadow-2xl shadow-[#023E7D]/40" commands={terminalCommands} />
+    <div class="relative mx-auto flex w-full max-w-md flex-col gap-6">
+      <MacTerminal className="w-full shadow-[0_30px_100px_rgba(3,83,164,0.35)]" commands={terminalCommands} />
     </div>
   </div>
 </section>

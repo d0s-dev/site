@@ -7,6 +7,8 @@ export interface CatalogApp {
   hasIronBank: boolean;
   hasChainguard: boolean;
   imageCount: number;
+  versionCount?: number;
+  buildCount?: number;
   cves: SeveritySummary;
   latestVersion: string;
   zarfPackage: string;

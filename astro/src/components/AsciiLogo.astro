@@ -1,0 +1,23 @@
+---
+interface Props {
+  variant?: "compact" | "hero";
+  class?: string;
+  className?: string;
+}
+
+const props = Astro.props as Props;
+const variant = props.variant ?? "compact";
+const classAttr = props.class ?? props.className ?? "";
+
+const asciiLogo = `███████▄    ▄█████▄   ▄███████▄
+███   ███  ███   ███  ███   ▀██
+███   ███  ███   ███  ███
+███   ███  ███   ███  ███▄▄▄▄▄
+███   ███  ███   ███   ▀▀▀▀▀███
+███   ███  ███   ███        ███
+███   ███  ███   ███  ██▄   ███
+███████▀    ▀█████▀   ▀███████▀`;
+
+const variantClass = variant === "hero" ? "ascii-logo--hero" : "ascii-logo--compact";
+---
+<pre class={`ascii-logo ${variantClass} ${classAttr}`.trim()}>{asciiLogo}</pre>

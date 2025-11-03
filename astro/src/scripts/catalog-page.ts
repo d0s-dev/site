@@ -181,6 +181,12 @@ function initFilters() {
   const providerButtons = Array.from(
     document.querySelectorAll<HTMLButtonElement>("[data-filter-provider]"),
   );
+  const labelSelect = document.querySelector<HTMLSelectElement>(
+    "[data-filter-label-select]",
+  );
+  const providerSelect = document.querySelector<HTMLSelectElement>(
+    "[data-filter-provider-select]",
+  );
   const searchInput = document.querySelector<HTMLInputElement>(
     "[data-filter-search]",
   );
@@ -192,7 +198,11 @@ function initFilters() {
     "[data-active-count]",
   );
 
-  const state = { label: "all", provider: "all", search: "" };
+  const state = {
+    label: labelSelect?.value ?? "all",
+    provider: providerSelect?.value ?? "all",
+    search: (searchInput?.value ?? "").trim().toLowerCase(),
+  };
 
   const setActiveButton = (buttons: HTMLButtonElement[], value: string) => {
     buttons.forEach((button) => {
@@ -244,8 +254,30 @@ function initFilters() {
       emptyState.classList.toggle("hidden", visibleCount !== 0);
     }
     if (activeCountTarget) {
-      activeCountTarget.textContent = String(visibleCount);
+      activeCountTarget.textContent = visibleCount.toLocaleString();
     }
+  };
+
+  const setLabel = (value: string) => {
+    state.label = value;
+    if (labelButtons.length) {
+      setActiveButton(labelButtons, value);
+    }
+    if (labelSelect && labelSelect.value !== value) {
+      labelSelect.value = value;
+    }
+    applyFilters();
+  };
+
+  const setProvider = (value: string) => {
+    state.provider = value;
+    if (providerButtons.length) {
+      setActiveButton(providerButtons, value);
+    }
+    if (providerSelect && providerSelect.value !== value) {
+      providerSelect.value = value;
+    }
+    applyFilters();
   };
 
   if (labelButtons.length) {
@@ -253,10 +285,16 @@ function initFilters() {
       button.addEventListener("click", () => {
         const value = button.dataset.filterLabel;
         if (!value) return;
-        state.label = value;
-        setActiveButton(labelButtons, value);
-        applyFilters();
+        setLabel(value);
       });
+    });
+    setActiveButton(labelButtons, state.label);
+  }
+
+  if (labelSelect) {
+    labelSelect.addEventListener("change", (event) => {
+      const value = String((event.target as HTMLSelectElement).value || "all");
+      setLabel(value);
     });
   }
 
@@ -265,10 +303,16 @@ function initFilters() {
       button.addEventListener("click", () => {
         const value = button.dataset.filterProvider;
         if (!value) return;
-        state.provider = value;
-        setActiveButton(providerButtons, value);
-        applyFilters();
+        setProvider(value);
       });
+    });
+    setActiveButton(providerButtons, state.provider);
+  }
+
+  if (providerSelect) {
+    providerSelect.addEventListener("change", (event) => {
+      const value = String((event.target as HTMLSelectElement).value || "all");
+      setProvider(value);
     });
   }
 

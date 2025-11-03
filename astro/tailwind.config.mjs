@@ -14,6 +14,22 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        brand: {
+          blue: {
+            100: "var(--blue-100)",
+            200: "var(--blue-200)",
+            300: "var(--blue-300)",
+            400: "var(--blue-400)",
+            500: "var(--blue-500)",
+          },
+          gray: {
+            100: "var(--gray-100)",
+            200: "var(--gray-200)",
+            300: "var(--gray-300)",
+            400: "var(--gray-400)",
+            500: "var(--gray-500)",
+          },
+        },
         card: {
           DEFAULT: "var(--card)",
           surface: "var(--card-surface)",

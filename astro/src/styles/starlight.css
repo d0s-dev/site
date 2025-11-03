@@ -1,23 +1,30 @@
 :root {
-  --sl-color-accent: #0466c8;
-  --sl-color-accent-dark: #023e7d;
-  --sl-color-background: #001233;
-  --sl-color-text: #e0f2ff;
-  --sl-color-text-muted: #8896b3;
+  /* Match brand colors from global.css */
+  --sl-color-accent: var(--blue-100, #0466C8);
+  --sl-color-accent-dark: var(--blue-300, #023E7D);
+  --sl-color-background: var(--gray-500, #001233);
+  --sl-color-text: #ffffff;
+  --sl-color-text-muted: var(--gray-200, #7D8597);
+  --sl-color-gray-1: var(--gray-200, #7D8597);
+  --sl-color-gray-2: var(--gray-300, #5C677D);
+  --sl-color-gray-3: var(--gray-400, #33415C);
+  --sl-color-gray-4: var(--blue-400, #002855);
+  --sl-color-gray-5: var(--blue-500, #001845);
+  --sl-color-gray-6: var(--gray-500, #001233);
   --sl-border-radius: 0.75rem;
   --sl-font-body: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --sl-font-display: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
-  --astro-code-color-text: #e0f2ff;
-  --astro-code-color-background: #001845;
+  --astro-code-color-text: var(--gray-100, #979DAC);
+  --astro-code-color-background: var(--gray-400, #33415C);
   --astro-code-token-constant: #4cc9f0;
   --astro-code-token-string: #6be09f;
-  --astro-code-token-comment: #5c677d;
+  --astro-code-token-comment: var(--gray-300, #5C677D);
   --astro-code-token-keyword: #ffd166;
   --astro-code-token-parameter: #f9dec9;
   --astro-code-token-function: #b5179e;
   --astro-code-token-string-expression: #6be09f;
-  --astro-code-token-punctuation: #8896b3;
-  --astro-code-token-link: #7ea8ff;
+  --astro-code-token-punctuation: var(--gray-200, #7D8597);
+  --astro-code-token-link: var(--blue-100, #0466C8);
 }
 
 :root[data-theme="light"] {
@@ -26,7 +33,7 @@
   --sl-color-text-muted: #4a5670;
   --astro-code-color-text: #15223b;
   --astro-code-color-background: #eef4ff;
-  --astro-code-token-constant: #0466c8;
+  --astro-code-token-constant: var(--blue-100, #0466C8);
   --astro-code-token-string: #007f5f;
   --astro-code-token-comment: #718096;
   --astro-code-token-keyword: #9b2c9c;
@@ -34,7 +41,7 @@
   --astro-code-token-function: #0050b3;
   --astro-code-token-string-expression: #007f5f;
   --astro-code-token-punctuation: #4a5670;
-  --astro-code-token-link: #0466c8;
+  --astro-code-token-link: var(--blue-100, #0466C8);
 }
 
 :root[data-theme="dark"] {
@@ -42,8 +49,8 @@
 }
 
 .starlight-header {
-  background: rgba(0, 15, 35, 0.92);
-  border-bottom: 1px solid rgba(2, 62, 125, 0.4);
+  background: color-mix(in srgb, var(--gray-500, #001233) 95%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--blue-400, #002855) 60%, transparent);
   backdrop-filter: blur(12px);
 }
 
@@ -51,10 +58,24 @@
   font-family: var(--sl-font-display);
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  color: #ffffff;
+}
+
+/* Main content area background matching catalog/home */
+.sl-doc-page,
+.sl-doc-page main,
+body {
+  background: var(--gray-500, #001233);
 }
 
 .sl-doc-page main {
-  background: linear-gradient(180deg, rgba(3, 53, 164, 0.08) 0%, transparent 28%);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--blue-400, #002855) 15%, transparent) 0%, transparent 40%);
+}
+
+/* Sidebar styling */
+.sidebar-pane {
+  background: color-mix(in srgb, var(--gray-500, #001233) 98%, transparent);
+  border-right: 1px solid color-mix(in srgb, var(--blue-400, #002855) 50%, transparent);
 }
 
 .sl-sidebar h2 {
@@ -65,19 +86,23 @@
 }
 
 .sl-sidebar a[aria-current="page"] {
-  background: rgba(4, 102, 200, 0.18);
-  border: 1px solid rgba(4, 102, 200, 0.35);
-  color: var(--sl-color-text);
+  background: color-mix(in srgb, var(--gray-400, #33415C) 75%, transparent);
+  border: 1px solid color-mix(in srgb, var(--blue-300, #023E7D) 40%, transparent);
+  color: #ffffff;
+  font-weight: 500;
 }
 
 .sl-link-button.primary {
-  background: linear-gradient(135deg, #0466c8 0%, #023e7d 100%);
+  background: linear-gradient(135deg, var(--blue-100, #0466C8) 0%, var(--blue-300, #023E7D) 100%);
   border: none;
   color: #ffffff;
+  font-weight: 600;
 }
 
 .sl-link-button.primary:hover {
-  filter: brightness(1.04);
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--blue-100, #0466C8) 40%, transparent);
 }
 
 pre, code {
@@ -86,16 +111,16 @@ pre, code {
 
 .sl-markdown pre {
   background: var(--astro-code-color-background);
-  border: 1px solid rgba(4, 102, 200, 0.2);
-  box-shadow: 0 24px 60px rgba(4, 102, 200, 0.12);
+  border: 1px solid color-mix(in srgb, var(--blue-300, #023E7D) 45%, transparent);
+  box-shadow: 0 24px 60px color-mix(in srgb, var(--gray-500, #001233) 18%, transparent);
 }
 
 .sl-markdown code:not(pre code) {
-  background: rgba(4, 102, 200, 0.12);
-  color: var(--sl-color-text);
+  background: color-mix(in srgb, var(--gray-400, #33415C) 65%, transparent);
+  color: #ffffff;
   padding: 0.125rem 0.4rem;
   border-radius: 999px;
-  border: 1px solid rgba(4, 102, 200, 0.2);
+  border: 1px solid color-mix(in srgb, var(--blue-300, #023E7D) 40%, transparent);
 }
 
 .sl-markdown pre code {
@@ -105,39 +130,44 @@ pre, code {
 
 site-search button[data-open-modal] {
   border-radius: 999px;
-  border: 1px solid rgba(4, 102, 200, 0.35);
-  background: rgba(4, 102, 200, 0.12);
-  color: var(--sl-color-text);
-  box-shadow: inset 0 0 0 1px rgba(4, 102, 200, 0.08);
-  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+  border: 1px solid color-mix(in srgb, var(--blue-300, #023E7D) 40%, transparent);
+  background: color-mix(in srgb, var(--gray-400, #33415C) 65%, transparent);
+  color: #ffffff;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--gray-400, #33415C) 30%, transparent);
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  padding: 0.5rem 1rem;
+  min-width: 300px;
+  width: 100%;
 }
 
 site-search button[data-open-modal]:hover,
 site-search button[data-open-modal]:focus-visible {
-  border-color: rgba(4, 102, 200, 0.6);
-  background: rgba(4, 102, 200, 0.18);
+  border-color: color-mix(in srgb, var(--blue-100, #0466C8) 60%, transparent);
+  background: color-mix(in srgb, var(--blue-100, #0466C8) 30%, transparent);
   color: #ffffff;
+  transform: translateY(-1px);
 }
 
 site-search button[data-open-modal] kbd {
   border-radius: 0.5rem;
-  border: 1px solid rgba(4, 102, 200, 0.35);
-  background: rgba(4, 102, 200, 0.16);
+  border: 1px solid color-mix(in srgb, var(--blue-300, #023E7D) 40%, transparent);
+  background: color-mix(in srgb, var(--gray-400, #33415C) 60%, transparent);
   color: inherit;
 }
 
 starlight-theme-select label {
   border-radius: 999px;
-  border: 1px solid rgba(4, 102, 200, 0.35);
-  background: rgba(4, 102, 200, 0.12);
-  color: var(--sl-color-text);
-  transition: border-color 0.2s ease, background 0.2s ease;
+  border: 1px solid color-mix(in srgb, var(--blue-300, #023E7D) 40%, transparent);
+  background: color-mix(in srgb, var(--gray-400, #33415C) 65%, transparent);
+  color: #ffffff;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
 }
 
 starlight-theme-select label:hover,
 starlight-theme-select label:focus-within {
-  border-color: rgba(4, 102, 200, 0.6);
-  background: rgba(4, 102, 200, 0.18);
+  border-color: color-mix(in srgb, var(--blue-100, #0466C8) 60%, transparent);
+  background: color-mix(in srgb, var(--blue-100, #0466C8) 30%, transparent);
+  transform: translateY(-1px);
 }
 
 starlight-theme-select select {
@@ -148,4 +178,93 @@ starlight-theme-select select {
 .sl-breadcrumbs {
   font-family: var(--sl-font-display);
   letter-spacing: 0.02em;
+}
+
+/* Improved content styling */
+.sl-markdown-content h1,
+.sl-markdown-content h2,
+.sl-markdown-content h3,
+.sl-markdown-content h4 {
+  color: #ffffff;
+}
+
+.sl-markdown-content p,
+.sl-markdown-content li {
+  color: var(--gray-100, #979DAC);
+}
+
+.sl-markdown-content a {
+  color: var(--blue-100, #0466C8);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.sl-markdown-content a:hover {
+  color: #ffffff;
+}
+
+.sl-markdown-content strong {
+  color: #ffffff;
+}
+
+/* Right sidebar (Table of contents) */
+.right-sidebar {
+  background: transparent;
+}
+
+.right-sidebar-container h2 {
+  color: var(--sl-color-text-muted);
+  font-size: 0.875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Pagination buttons */
+.pagination-links a {
+  border: 1px solid color-mix(in srgb, var(--blue-300, #023E7D) 40%, transparent);
+  background: color-mix(in srgb, var(--gray-400, #33415C) 65%, transparent);
+  color: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.pagination-links a:hover {
+  border-color: color-mix(in srgb, var(--blue-100, #0466C8) 60%, transparent);
+  background: color-mix(in srgb, var(--blue-100, #0466C8) 30%, transparent);
+  transform: translateY(-2px);
+}
+
+/* Version switcher in header */
+.header-version-switcher {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header-version-switcher select {
+  appearance: none;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--blue-300, #023E7D) 40%, transparent);
+  background: color-mix(in srgb, var(--gray-400, #33415C) 65%, transparent);
+  color: #ffffff;
+  padding: 0.375rem 2rem 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%230466C8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+  background-size: 1rem;
+}
+
+.header-version-switcher select:hover,
+.header-version-switcher select:focus {
+  border-color: color-mix(in srgb, var(--blue-100, #0466C8) 60%, transparent);
+  background-color: color-mix(in srgb, var(--blue-100, #0466C8) 30%, transparent);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.header-version-switcher select option {
+  background: var(--gray-500, #001233);
+  color: #ffffff;
 }

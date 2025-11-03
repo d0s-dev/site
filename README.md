@@ -13,6 +13,12 @@ This site uses a custom Figma design built with **Astro**, **Starlight**, and **
 - **App Catalog** - Browse and deploy applications with live GitHub data
 - **Interactive Features** - CVE charts, manifest overlays, and filtering
 
+### Color Palette
+
+Primary shades (light → dark): `#0466C8`, `#0353A4`, `#023E7D`, `#002855`, `#001845`
+
+Neutral shades (light → dark): `#979DAC`, `#7D8597`, `#5C677D`, `#33415C`, `#001233`
+
 ## 🚀 Local Development
 
 ### Prerequisites

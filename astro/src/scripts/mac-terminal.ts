@@ -42,14 +42,15 @@ async function runTerminal({ element, commands, loop }: TerminalConfig) {
           entry.className = "space-y-1";
           entry.innerHTML = `
             <div class="flex items-center gap-2">
-              <span class="text-[#0466C8]">$</span>
+              <span class="font-semibold text-brand-blue-100">$</span>
               <span class="font-mono text-white">${input}</span>
             </div>
-            <div class="ml-6 text-[#979DAC]">${output}</div>`;
+            <div class="ml-6 text-brand-gray-200/90">${output}</div>`;
           log.append(entry);
           inputEl.textContent = "";
           outputEl.textContent = "";
           outputEl.classList.remove("fade-in");
+          outputEl.classList.add("opacity-0");
           charIndex = 0;
           typing = true;
           commandIndex += 1;

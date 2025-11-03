@@ -1,4 +1,6 @@
 ---
+import AsciiLogo from "./AsciiLogo.astro";
+
 interface Props {
   current?: "home" | "docs" | "catalog";
 }
@@ -11,18 +13,11 @@ const links = [
   { href: "/catalog", label: "Catalog", id: "catalog" as const },
 ];
 ---
-<nav class="fixed inset-x-0 top-0 z-50 border-b border-[#002855] bg-[#001233]/95 backdrop-blur-sm">
+<nav class="fixed inset-x-0 top-0 z-50 border-b border-brand-blue-400/60 bg-brand-blue-500/20 backdrop-blur-md">
   <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-    <a class="flex items-center gap-2 transition-opacity hover:opacity-80" href="/" aria-label="d0s.dev home">
-      <span class="grid size-10 place-items-center rounded" style="background: linear-gradient(135deg, #0466C8 0%, #023E7D 100%);">
-        <svg aria-hidden="true" class="size-5 text-white" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
-          <path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z" />
-          <path d="M12 22V12" />
-          <polyline points="3.29 7 12 12 20.71 7" />
-          <path d="m7.5 4.27 9 5.15" />
-        </svg>
-      </span>
-      <span class="font-mono text-white">d0s.dev</span>
+    <a class="group flex items-center gap-3 transition-opacity hover:opacity-90" href="/" aria-label="d0s.dev home">
+      <AsciiLogo class="hidden sm:block" />
+      <span class="font-mono text-white sm:hidden">d0s.dev</span>
     </a>
     <div class="flex items-center gap-6">
       {links.map((link) => (
@@ -35,7 +30,7 @@ const links = [
         </a>
       ))}
       <a
-        class="text-[#979DAC] transition-colors hover:text-[#0466C8]"
+        class="text-brand-gray-200 transition-colors hover:text-brand-blue-100"
         href="https://github.com/d0s-dev"
         rel="noopener noreferrer"
         target="_blank"
@@ -53,17 +48,17 @@ const links = [
 <style>
   .nav-link {
     position: relative;
-    color: #979DAC;
+    color: color-mix(in srgb, var(--gray-200) 80%, transparent);
     transition: color 150ms ease;
     padding: 0.25rem 0;
   }
 
   .nav-link:hover {
-    color: #ffffff;
+    color: var(--gray-100);
   }
 
   .nav-link[data-active="true"] {
-    color: #0466C8;
+    color: var(--blue-100);
   }
 
   .nav-link[data-active="true"]::after {
@@ -74,6 +69,6 @@ const links = [
     bottom: -0.25rem;
     height: 2px;
     border-radius: 9999px;
-    background: linear-gradient(90deg, #0466C8, #023E7D);
+    background: linear-gradient(90deg, var(--blue-100), var(--blue-300));
   }
 </style>
