@@ -27,6 +27,6 @@ describe("catalog page build output", () => {
 
   it("renders catalog summary metrics", () => {
     expect(catalogHtml).toContain("Offline readiness matrix");
-    expect(catalogHtml).toMatch(/Packages tracked/);
+    expect(catalogHtml).toMatch(/Showing .* packages/);
   });
 });
