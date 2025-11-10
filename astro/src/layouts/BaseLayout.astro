@@ -2,7 +2,6 @@
 import Navigation from "../components/Navigation.astro";
 import Footer from "../components/Footer.astro";
 import "../styles/global.css";
-import macTerminalScript from "../scripts/mac-terminal.ts?url";
 
 interface Props {
   title?: string;
@@ -41,6 +40,9 @@ const {
       <slot />
     </main>
     {showFooter && <Footer />}
-    <script type="module" src={macTerminalScript} is:inline></script>
   </body>
 </html>
+
+<script>
+import "../scripts/mac-terminal.ts";
+</script>

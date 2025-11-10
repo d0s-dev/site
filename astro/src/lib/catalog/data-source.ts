@@ -57,9 +57,12 @@ export async function fetchCatalogData(
   const now = Date.now();
   const cached = cache.catalog;
 
+  // During SSG build, always show as "remote" not "cache"
+  const isSSG = typeof window === 'undefined';
+
   if (cached && !forceRefresh && now - cached.fetchedAt < ttlMs) {
     return {
-      source: cached.source === "remote" ? "cache" : cached.source,
+      source: isSSG ? "remote" : (cached.source === "remote" ? "cache" : cached.source),
       response: cached.response,
       fetchedAt: cached.fetchedAt,
     };
@@ -81,7 +84,7 @@ export async function fetchCatalogData(
   } catch (error: unknown) {
     if (cached && (error as { status?: number }).status === 304) {
       return {
-        source: "cache",
+        source: isSSG ? "remote" : "cache",
         response: cached.response,
         fetchedAt: cached.fetchedAt,
       };
