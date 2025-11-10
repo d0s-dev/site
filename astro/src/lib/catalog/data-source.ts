@@ -57,8 +57,14 @@ export async function fetchCatalogData(
   const now = Date.now();
   const cached = cache.catalog;
 
-  // During SSG build, always show as "remote" not "cache"
-  const isSSG = typeof window === "undefined";
+  // During SSG build (Astro SSR), always show as "remote" not "cache"
+  // In tests/browser, show actual cache status
+  // Skip SSG behavior in test environments (vitest sets import.meta.env.VITEST)
+  const isSSG =
+    typeof window === "undefined" &&
+    typeof import.meta.env !== "undefined" &&
+    import.meta.env.SSR === true &&
+    !import.meta.env.VITEST;
 
   if (cached && !forceRefresh && now - cached.fetchedAt < ttlMs) {
     return {
