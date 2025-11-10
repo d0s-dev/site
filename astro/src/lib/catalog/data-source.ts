@@ -58,11 +58,15 @@ export async function fetchCatalogData(
   const cached = cache.catalog;
 
   // During SSG build, always show as "remote" not "cache"
-  const isSSG = typeof window === 'undefined';
+  const isSSG = typeof window === "undefined";
 
   if (cached && !forceRefresh && now - cached.fetchedAt < ttlMs) {
     return {
-      source: isSSG ? "remote" : (cached.source === "remote" ? "cache" : cached.source),
+      source: isSSG
+        ? "remote"
+        : cached.source === "remote"
+          ? "cache"
+          : cached.source,
       response: cached.response,
       fetchedAt: cached.fetchedAt,
     };
