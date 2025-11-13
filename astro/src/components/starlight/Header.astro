@@ -2,20 +2,14 @@
 import LanguageSelect from '@astrojs/starlight/components/LanguageSelect.astro';
 import Search from '@astrojs/starlight/components/Search.astro';
 import SocialIcons from '@astrojs/starlight/components/SocialIcons.astro';
+import AsciiLogo from '../AsciiLogo.astro';
 import versionSwitcherScript from "../../scripts/version-switcher.ts?url";
 ---
 
 <div class="header sl-flex">
   <div class="sl-flex title-wrapper">
     <a href="/" class="site-title">
-      <pre class="d0s-logo">███████▄    ▄█████▄   ▄███████▄
-███   ███  ███   ███  ███   ▀██
-███   ███  ███   ███  ███
-███   ███  ███   ███  ███▄▄▄▄▄
-███   ███  ███   ███   ▀▀▀▀▀███
-███   ███  ███   ███        ███
-███   ███  ███   ███  ██▄   ███
-███████▀    ▀█████▀   ▀███████▀</pre>
+      <AsciiLogo />
     </a>
   </div>
   <div class="sl-flex search-wrapper">
@@ -65,23 +59,6 @@ import versionSwitcherScript from "../../scripts/version-switcher.ts?url";
 
   .site-title:hover {
     opacity: 0.8;
-  }
-
-  .d0s-logo {
-    font-family: 'JetBrains Mono', monospace;
-    white-space: pre;
-    letter-spacing: 0.08em;
-    line-height: 0.45rem;
-    font-size: 0.45rem;
-    margin: 0;
-    color: var(--blue-200, #61A5C2);
-    transition: color 180ms ease, text-shadow 180ms ease, transform 180ms ease;
-  }
-
-  .site-title:hover .d0s-logo {
-    color: var(--blue-100, #0466C8);
-    text-shadow: 0 0 18px color-mix(in srgb, var(--blue-100, #0466C8) 55%, transparent);
-    transform: translateY(-1px);
   }
 
   .doc-label {

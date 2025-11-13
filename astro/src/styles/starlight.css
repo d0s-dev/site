@@ -268,3 +268,24 @@ starlight-theme-select select {
   background: var(--gray-500, #001233);
   color: #ffffff;
 }
+
+/* Match logo styling between Starlight header and main nav */
+.header .site-title .ascii-logo-wrapper {
+  transform: scale(0.5);
+}
+
+.header .site-title .ascii-logo {
+  font-family: 'Cascadia Code', Menlo, Monaco, Consolas, 'Courier New', monospace !important;
+  white-space: pre !important;
+  letter-spacing: -0.0425em !important;
+  line-height: 1.09375 !important;
+  font-size: clamp(0.35rem, 1vw, 0.8rem) !important;
+  color: var(--blue-200, #61A5C2) !important;
+  margin: 0 !important;
+  transition: color 180ms ease, text-shadow 180ms ease, transform 180ms ease !important;
+}
+
+.header .site-title:hover .ascii-logo {
+  color: var(--blue-100, #0466C8) !important;
+  text-shadow: 0 0 18px color-mix(in srgb, var(--blue-100, #0466C8) 55%, transparent) !important;
+}

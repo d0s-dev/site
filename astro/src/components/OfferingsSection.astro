@@ -1,0 +1,221 @@
+---
+const offerings = [
+  {
+    id: "catalog",
+    icon: "📦",
+    title: "App Catalog",
+    description: "Pre-packaged Zarf bundles for popular cloud-native applications. Deploy with confidence using tested, secure packages.",
+    link: { url: "https://zarf.dev", text: "Learn about Zarf →" },
+    features: [
+      "Curated application packages",
+      "Air-gap ready deployments",
+      "Version-controlled releases",
+      "SBOM included",
+    ],
+  },
+  {
+    id: "idp",
+    icon: "🚀",
+    title: "Internal Developer Platform",
+    description: "Complete IDP stack deployed in one command. Everything your team needs to build, deploy, and manage applications.",
+    link: { url: "https://headlamp.dev", text: "Powered by Headlamp →" },
+    features: [
+      "GitOps workflows",
+      "Integrated CI/CD",
+      "Self-service deployments",
+      "Developer dashboard",
+    ],
+  },
+  {
+    id: "factory",
+    icon: "🏭",
+    title: "Factory",
+    description: "Automated tooling for building secure, production-ready applications with built-in integrations.",
+    link: { url: "/contact", text: "Contact us for details →" },
+    features: [
+      "AI RAG connections",
+      "OIDC integration",
+      "Secrets management",
+      "Metrics & logging automation",
+      "CSP resource automation",
+      "FinOPS cost management",
+    ],
+  },
+  {
+    id: "secure-apps",
+    icon: "🛡️",
+    title: "Secure Apps",
+    description: "FIPS-validated containers built on UBI (Universal Base Image) foundation for maximum security compliance.",
+    link: { url: "https://zarf.dev", text: "Explore Zarf packages →" },
+    features: [
+      "FIPS 140-2 compliance",
+      "UBI-based containers",
+      "Regular security updates",
+      "Vulnerability scanning",
+    ],
+  },
+];
+---
+<section class="relative px-4 py-24 md:px-8">
+  <div class="mx-auto max-w-7xl">
+    <div class="mb-16 text-center">
+      <h2 class="text-4xl font-bold text-white sm:text-5xl">
+        What We <span class="gradient-text">Offer</span>
+      </h2>
+      <p class="mx-auto mt-4 max-w-2xl text-lg text-brand-gray-200">
+        Complete solutions for secure, offline-first Kubernetes deployments
+      </p>
+    </div>
+
+    <div class="space-y-24">
+      {offerings.map((offering, index) => (
+        <div 
+          class="offering-item grid items-center gap-12 lg:grid-cols-2"
+          class:list={{ "lg:flex-row-reverse": index % 2 === 1 }}
+          style={`animation-delay: ${index * 150}ms`}
+        >
+          <div class={index % 2 === 1 ? "lg:order-2" : ""}>
+            <div class="mb-6 flex size-20 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-blue-200/30 to-brand-blue-400/30 text-5xl backdrop-blur">
+              {offering.icon}
+            </div>
+            <h3 class="mb-4 text-3xl font-bold text-white">
+              {offering.title}
+            </h3>
+            <p class="mb-6 text-lg leading-relaxed text-brand-gray-200">
+              {offering.description}
+            </p>
+            <ul class="mb-6 space-y-3">
+              {offering.features.map((feature) => (
+                <li class="flex items-start gap-3 text-brand-gray-100">
+                  <svg class="mt-1 size-5 shrink-0 text-brand-blue-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>{feature}</span>
+                </li>
+              ))}
+            </ul>
+            <a 
+              href={offering.link.url}
+              class="inline-flex items-center gap-2 text-brand-blue-100 transition-colors hover:text-brand-blue-200"
+              rel={offering.link.url.startsWith("http") ? "noopener noreferrer" : undefined}
+              target={offering.link.url.startsWith("http") ? "_blank" : undefined}
+            >
+              {offering.link.text}
+            </a>
+          </div>
+          
+          <div class={index % 2 === 1 ? "lg:order-1" : ""}>
+            <div class="offering-visual relative overflow-hidden rounded-2xl border border-brand-blue-400/30 bg-gradient-to-br from-card/80 to-card/40 p-8 backdrop-blur">
+              <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_rgba(4,102,200,0.1)_0%,_transparent_70%)]"></div>
+              <div class="relative">
+                {offering.id === "catalog" && (
+                  <div class="space-y-3">
+                    {["nginx", "postgresql", "redis"].map((app, i) => (
+                      <div 
+                        class="flex items-center gap-3 rounded-lg border border-brand-blue-400/20 bg-brand-gray-500/50 p-4"
+                        style={`animation-delay: ${(index * 150) + (i * 100)}ms`}
+                      >
+                        <div class="flex size-10 items-center justify-center rounded-lg bg-brand-blue-400/20 text-xl">📦</div>
+                        <div class="flex-1">
+                          <div class="font-semibold text-white capitalize">{app}</div>
+                          <div class="text-sm text-brand-gray-200">v1.0.0 • Air-gap ready</div>
+                        </div>
+                        <div class="rounded-full bg-green-600/20 px-3 py-1 text-xs font-semibold text-green-400">Secure</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                
+                {offering.id === "idp" && (
+                  <div class="space-y-4">
+                    <div class="rounded-lg border border-brand-blue-400/20 bg-brand-gray-500/50 p-4">
+                      <div class="mb-3 text-sm text-brand-gray-200">Deployment Pipeline</div>
+                      <div class="flex gap-2">
+                        {["Build", "Test", "Deploy"].map((stage, i) => (
+                          <div class="flex-1 rounded bg-brand-blue-400/20 p-2 text-center text-xs text-white">
+                            <div class="mb-1 text-green-400">✓</div>
+                            {stage}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                      {["GitOps", "CI/CD", "Monitoring", "Logs"].map((tool) => (
+                        <div class="rounded-lg border border-brand-blue-400/20 bg-brand-gray-500/50 p-3 text-center text-sm text-white">
+                          {tool}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
+                {offering.id === "factory" && (
+                  <div class="space-y-3">
+                    {["AI RAG", "OIDC", "Secrets", "Metrics", "CSP", "FinOPS"].map((feature, i) => (
+                      <div 
+                        class="flex items-center gap-3 rounded-lg border border-brand-blue-400/20 bg-brand-gray-500/50 p-3"
+                        style={`animation-delay: ${(index * 150) + (i * 80)}ms`}
+                      >
+                        <div class="size-2 rounded-full bg-brand-blue-100"></div>
+                        <span class="text-sm text-white">{feature} Integration</span>
+                        <div class="ml-auto text-xs text-green-400">Automated</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                
+                {offering.id === "secure-apps" && (
+                  <div class="space-y-4">
+                    <div class="rounded-lg border border-brand-blue-400/20 bg-brand-gray-500/50 p-4">
+                      <div class="mb-2 flex items-center gap-2">
+                        <div class="size-3 rounded-full bg-green-400"></div>
+                        <span class="text-sm font-semibold text-white">FIPS 140-2 Compliant</span>
+                      </div>
+                      <div class="text-xs text-brand-gray-200">UBI 9 Foundation • CVE Scanning Active</div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                      <div class="rounded-lg border border-brand-blue-400/20 bg-brand-gray-500/50 p-3 text-center">
+                        <div class="text-2xl font-bold text-green-400">0</div>
+                        <div class="text-xs text-brand-gray-200">Critical CVEs</div>
+                      </div>
+                      <div class="rounded-lg border border-brand-blue-400/20 bg-brand-gray-500/50 p-3 text-center">
+                        <div class="text-2xl font-bold text-brand-blue-100">100%</div>
+                        <div class="text-xs text-brand-gray-200">Scanned</div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .offering-item {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 0.8s ease forwards;
+  }
+
+  .offering-visual > div > div > div {
+    opacity: 0;
+    animation: fadeInStagger 0.4s ease forwards;
+  }
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeInStagger {
+    to {
+      opacity: 1;
+    }
+  }
+</style>

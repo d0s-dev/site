@@ -1,76 +1,24 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Hero from "../components/Hero.astro";
-import FeaturesGrid from "../components/FeaturesGrid.astro";
-import ComparisonTable from "../components/ComparisonTable.astro";
-import StatsStrip from "../components/StatsStrip.astro";
+import TerminalDemo from "../components/TerminalDemo.astro";
+import ContextHighlights from "../components/ContextHighlights.astro";
+import OfferingsSection from "../components/OfferingsSection.astro";
+import ComponentsArchitecture from "../components/ComponentsArchitecture.astro";
 import CatalogPreview from "../components/CatalogPreview.astro";
 import FinalCta from "../components/FinalCta.astro";
 import copyButtonsScript from "../scripts/copy-buttons.ts?url";
-
-const features = [
-	{
-		title: "1-Click Speed",
-		description: "Deploy, update, and secure Kubernetes apps instantly.",
-		badge: "🚀",
-	},
-	{
-		title: "Opt-in Mutations",
-		description: "Safe, auditable cluster changes powered by Zarf.",
-		badge: "🧩",
-	},
-	{
-		title: "Edge-Lightweight",
-		description: "RPi-ready footprint designed for bandwidth-constrained sites.",
-		badge: "📱",
-	},
-	{
-		title: "Air-Gap Native",
-		description: "Bundle everything you need for disconnected operations.",
-		badge: "🛡️",
-	},
-	{
-		title: "Modular Catalog",
-		description: "Mix-and-match secure cubes from our curated catalog.",
-		badge: "📦",
-	},
-	{
-		title: "CLI/TUI Mastery",
-		description: "Zero YAML drift, real automation for operators.",
-		badge: "⌨️",
-	},
-];
-
-const comparison = [
-	{ feature: "Deployment Speed", d0s: "10s", manual: "30m+", bigbang: "15m", cnoe: "20m" },
-	{ feature: "Offline Support", d0s: true, manual: false, bigbang: false, cnoe: false },
-	{ feature: "Footprint", d0s: "20Mi", manual: "N/A", bigbang: "500Mi+", cnoe: "300Mi+" },
-	{ feature: "Built-in Integrations", d0s: true, manual: false, bigbang: true, cnoe: true },
-	{ feature: "Air-Gap Ready", d0s: true, manual: false, bigbang: false, cnoe: false },
-];
-
-const stats = [
-	{ value: "1000+", label: "GitHub Stars" },
-	{ value: "50+", label: "Secure Cubes" },
-	{ value: "99.9%", label: "Uptime" },
-	{ value: "10s", label: "Deploy Time" },
-];
-
-const catalogApps = [
-	{ name: "Nginx", status: "Secure", cves: 0 },
-	{ name: "Keycloak", status: "2 CVEs", cves: 2 },
-	{ name: "PostgreSQL", status: "1 CVE", cves: 1 },
-	{ name: "PLG Stack", status: "Secure", cves: 0 },
-];
-
-const installScript = "curl -sSL https://d0s.dev/install | sh";
+import macTerminalScript from "../scripts/mac-terminal.ts?url";
 ---
 <BaseLayout current="home">
   <Hero />
-  <FeaturesGrid features={features} />
-  <ComparisonTable rows={comparison} />
-  <StatsStrip stats={stats} />
-  <CatalogPreview apps={catalogApps} />
-  <FinalCta installScript={installScript} />
+  <TerminalDemo />
+  <ContextHighlights />
+  <OfferingsSection />
+  <ComponentsArchitecture />
+  <CatalogPreview />
+  <FinalCta />
 </BaseLayout>
 <script type="module" src={copyButtonsScript} is:inline></script>
+<script type="module" src={macTerminalScript} is:inline></script>
+

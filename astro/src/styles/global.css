@@ -1,6 +1,48 @@
+/* Cascadia Code Font Family */
+@font-face {
+  font-display: swap;
+  font-family: 'Cascadia Code';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Cascadia Code SemiLight'), local('CascadiaCode-SemiLight'),
+       url('https://cdn.jsdelivr.net/npm/@fontsource/cascadia-code@5.0.0/files/cascadia-code-latin-300-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Cascadia Code';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Cascadia Code'), local('CascadiaCode-Regular'),
+       url('https://cdn.jsdelivr.net/npm/@fontsource/cascadia-code@5.0.0/files/cascadia-code-latin-400-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Cascadia Code';
+  font-style: normal;
+  font-weight: 600;
+  src: local('Cascadia Code SemiBold'), local('CascadiaCode-SemiBold'),
+       url('https://cdn.jsdelivr.net/npm/@fontsource/cascadia-code@5.0.0/files/cascadia-code-latin-600-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Cascadia Code';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Cascadia Code Bold'), local('CascadiaCode-Bold'),
+       url('https://cdn.jsdelivr.net/npm/@fontsource/cascadia-code@5.0.0/files/cascadia-code-latin-700-normal.woff2') format('woff2');
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
 :root {
   --font-size: 16px;
 
@@ -303,13 +345,13 @@ html {
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
   display: block;
   width: 100%;
-  max-width: 28rem;
+  max-width: 48rem;
   min-width: 0;
 }
 
 .terminal-header {
   background: linear-gradient(to bottom, var(--gray-400), color-mix(in srgb, var(--gray-500) 80%, transparent));
-  padding: 12px 16px;
+  padding: 14px 20px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -317,8 +359,8 @@ html {
 }
 
 .terminal-dot {
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
 }
 
@@ -335,12 +377,12 @@ html {
 }
 
 .terminal-body {
-  padding: 24px;
+  padding: 32px;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.6;
   color: var(--gray-100);
-  min-height: 220px;
+  min-height: 340px;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
@@ -403,25 +445,36 @@ html {
 }
 
 /* ASCII Logo */
+.ascii-logo-wrapper {
+  display: inline-block;
+  transform: scale(0.5);
+  transform-origin: center;
+}
+
+/* Scale down for hero/footer contexts */
+.ascii-logo-wrapper--scaled {
+  transform: scale(0.5);
+}
+
 .ascii-logo {
   display: block;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Cascadia Code', Menlo, Monaco, Consolas, 'Courier New', monospace;
   white-space: pre;
-  letter-spacing: 0.08em;
-  line-height: 0.65rem;
-  font-size: 0.6rem;
+  letter-spacing: -0.0425em;
+  line-height: 1.09375;
+  font-size: clamp(0.425rem, 1.25vw, 1rem);
   color: var(--blue-200);
   transition: color 180ms ease, text-shadow 180ms ease, transform 180ms ease;
 }
 
 .ascii-logo--compact {
-  font-size: 0.45rem;
-  line-height: 0.45rem;
+  font-size: clamp(0.35rem, 1vw, 0.8rem);
+  line-height: 1.09375;
 }
 
 .ascii-logo--hero {
-  font-size: 0.95rem;
-  line-height: 0.9rem;
+  font-size: clamp(0.5rem, 1.4vw, 1.15rem);
+  line-height: 1.09375;
 }
 
 .ascii-logo:hover,
