@@ -18,6 +18,15 @@ const asciiLogo = `███████▄    ▄█████▄   ▄██
 ███   ███  ███   ███  ██▄   ███
 ███████▀    ▀█████▀   ▀███████▀`;
 
+const asciiLogo2 = `      ███   ▄█████▄
+      ███  ███   ███
+      ███  ███   ███
+      ███  ███   ███
+▄████████  ███   ███  ▄██████▄
+███   ███  ███   ███  ███▄▄▄▄▄
+███   ███  ███   ███   ▀▀▀▀▀██
+▀████████   ▀█████▀   ▀██████▀`;
+
 const variantClass = variant === "hero" ? "ascii-logo--hero" : "ascii-logo--compact";
 ---
 <pre class={`ascii-logo ${variantClass} ${classAttr}`.trim()}>{asciiLogo}</pre>
