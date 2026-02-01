@@ -3,9 +3,7 @@ function copyButtonsInit() {
     return;
   }
 
-  const buttons = Array.from(
-    document.querySelectorAll<HTMLButtonElement>(".copy-button"),
-  );
+  const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>(".copy-button"));
   if (!buttons.length) {
     return;
   }
@@ -13,8 +11,7 @@ function copyButtonsInit() {
   buttons.forEach((button) => {
     button.addEventListener("click", async () => {
       const value = button.getAttribute("data-copy");
-      const status =
-        button.closest<HTMLElement>(".copy-wrapper")?.nextElementSibling;
+      const status = button.closest<HTMLElement>(".copy-wrapper")?.nextElementSibling;
       if (!value) return;
 
       try {

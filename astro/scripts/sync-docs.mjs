@@ -11,14 +11,12 @@ const DOCS = [
   {
     slug: "catalog",
     title: "Catalog Consumption",
-    description:
-      "How to source, verify, and deploy packages from the d0s catalog.",
+    description: "How to source, verify, and deploy packages from the d0s catalog.",
     remote: "docs/catalog.md",
   },
 ];
 
-const DEFAULT_REMOTE_BASE =
-  "https://raw.githubusercontent.com/d0s-dev/docs/refs/heads/main";
+const DEFAULT_REMOTE_BASE = "https://raw.githubusercontent.com/d0s-dev/docs/refs/heads/main";
 const remoteBase = process.env.D0S_DOCS_REMOTE_BASE ?? DEFAULT_REMOTE_BASE;
 
 async function ensureDir(path) {

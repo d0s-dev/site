@@ -107,7 +107,8 @@ export const mockManifests: Record<string, CatalogManifest> = {
     id: "redis",
     name: "Redis",
     summary: "In-memory data structure store for caching and message brokering",
-    description: "Redis is an open source, in-memory data structure store used as a database, cache, message broker, and streaming engine.",
+    description:
+      "Redis is an open source, in-memory data structure store used as a database, cache, message broker, and streaming engine.",
     category: "database",
     labels: ["database", "cache"],
     upstream: {
@@ -131,8 +132,14 @@ export const mockManifests: Record<string, CatalogManifest> = {
           arm64: "ghcr.io/d0s-dev/apps/redis:24.1.2-arm64",
         },
         images: [
-          { name: "docker.io/bitnami/redis:7.4.2-debian-12-r0", platforms: ["linux/amd64", "linux/arm64"] },
-          { name: "docker.io/bitnami/redis-sentinel:7.4.2-debian-12-r0", platforms: ["linux/amd64", "linux/arm64"] },
+          {
+            name: "docker.io/bitnami/redis:7.4.2-debian-12-r0",
+            platforms: ["linux/amd64", "linux/arm64"],
+          },
+          {
+            name: "docker.io/bitnami/redis-sentinel:7.4.2-debian-12-r0",
+            platforms: ["linux/amd64", "linux/arm64"],
+          },
         ],
         aggregates: cves({ medium: 1, low: 2 }),
       },
@@ -141,9 +148,7 @@ export const mockManifests: Record<string, CatalogManifest> = {
         chartVersion: "24.1.0",
         appVersion: "7.4.1",
         released: "2024-10-01T00:00:00Z",
-        images: [
-          { name: "docker.io/bitnami/redis:7.4.1-debian-12-r0" },
-        ],
+        images: [{ name: "docker.io/bitnami/redis:7.4.1-debian-12-r0" }],
         aggregates: cves({ medium: 1, low: 3 }),
       },
     ],

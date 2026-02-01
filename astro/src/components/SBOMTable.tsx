@@ -32,9 +32,7 @@ export function SBOMTable({
   notAvailable = false,
   showImageSource = false,
 }: SBOMTableProps) {
-  const [sorting, setSorting] = useState<SortingState>([
-    { id: "name", desc: false },
-  ]);
+  const [sorting, setSorting] = useState<SortingState>([{ id: "name", desc: false }]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [pageSize, setPageSize] = useState(25);
 
@@ -43,9 +41,7 @@ export function SBOMTable({
       {
         accessorKey: "name",
         header: "Package",
-        cell: ({ getValue }) => (
-          <span className="font-mono text-white">{getValue<string>()}</span>
-        ),
+        cell: ({ getValue }) => <span className="font-mono text-white">{getValue<string>()}</span>,
         filterFn: "includesString",
       },
       {
@@ -69,9 +65,12 @@ export function SBOMTable({
             pip: "bg-yellow-500/20 text-yellow-400 border-yellow-500/40",
             apk: "bg-green-500/20 text-green-400 border-green-500/40",
           };
-          const colorClass = typeColors[type.toLowerCase()] || "bg-gray-500/20 text-gray-400 border-gray-500/40";
+          const colorClass =
+            typeColors[type.toLowerCase()] || "bg-gray-500/20 text-gray-400 border-gray-500/40";
           return (
-            <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${colorClass}`}>
+            <span
+              className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${colorClass}`}
+            >
               {type}
             </span>
           );
@@ -100,7 +99,10 @@ export function SBOMTable({
         accessorKey: "imageSource",
         header: "Image",
         cell: ({ getValue }) => (
-          <span className="font-mono text-xs text-[#5C677D] truncate max-w-[150px] block" title={getValue<string>()}>
+          <span
+            className="font-mono text-xs text-[#5C677D] truncate max-w-[150px] block"
+            title={getValue<string>()}
+          >
             {getValue<string>()}
           </span>
         ),

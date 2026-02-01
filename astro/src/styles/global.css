@@ -1,38 +1,50 @@
 /* Cascadia Code Font Family */
 @font-face {
   font-display: swap;
-  font-family: 'Cascadia Code';
+  font-family: "Cascadia Code";
   font-style: normal;
   font-weight: 300;
-  src: local('Cascadia Code SemiLight'), local('CascadiaCode-SemiLight'),
-       url('https://cdn.jsdelivr.net/npm/@fontsource/cascadia-code@5.0.0/files/cascadia-code-latin-300-normal.woff2') format('woff2');
+  src:
+    local("Cascadia Code SemiLight"),
+    local("CascadiaCode-SemiLight"),
+    url("https://cdn.jsdelivr.net/npm/@fontsource/cascadia-code@5.0.0/files/cascadia-code-latin-300-normal.woff2")
+    format("woff2");
 }
 
 @font-face {
   font-display: swap;
-  font-family: 'Cascadia Code';
+  font-family: "Cascadia Code";
   font-style: normal;
   font-weight: 400;
-  src: local('Cascadia Code'), local('CascadiaCode-Regular'),
-       url('https://cdn.jsdelivr.net/npm/@fontsource/cascadia-code@5.0.0/files/cascadia-code-latin-400-normal.woff2') format('woff2');
+  src:
+    local("Cascadia Code"),
+    local("CascadiaCode-Regular"),
+    url("https://cdn.jsdelivr.net/npm/@fontsource/cascadia-code@5.0.0/files/cascadia-code-latin-400-normal.woff2")
+    format("woff2");
 }
 
 @font-face {
   font-display: swap;
-  font-family: 'Cascadia Code';
+  font-family: "Cascadia Code";
   font-style: normal;
   font-weight: 600;
-  src: local('Cascadia Code SemiBold'), local('CascadiaCode-SemiBold'),
-       url('https://cdn.jsdelivr.net/npm/@fontsource/cascadia-code@5.0.0/files/cascadia-code-latin-600-normal.woff2') format('woff2');
+  src:
+    local("Cascadia Code SemiBold"),
+    local("CascadiaCode-SemiBold"),
+    url("https://cdn.jsdelivr.net/npm/@fontsource/cascadia-code@5.0.0/files/cascadia-code-latin-600-normal.woff2")
+    format("woff2");
 }
 
 @font-face {
   font-display: swap;
-  font-family: 'Cascadia Code';
+  font-family: "Cascadia Code";
   font-style: normal;
   font-weight: 700;
-  src: local('Cascadia Code Bold'), local('CascadiaCode-Bold'),
-       url('https://cdn.jsdelivr.net/npm/@fontsource/cascadia-code@5.0.0/files/cascadia-code-latin-700-normal.woff2') format('woff2');
+  src:
+    local("Cascadia Code Bold"),
+    local("CascadiaCode-Bold"),
+    url("https://cdn.jsdelivr.net/npm/@fontsource/cascadia-code@5.0.0/files/cascadia-code-latin-700-normal.woff2")
+    format("woff2");
 }
 
 @tailwind base;
@@ -47,15 +59,15 @@ html {
   --font-size: 16px;
 
   /* Core palette tokens */
-  --blue-100: #0466C8;
-  --blue-200: #0353A4;
-  --blue-300: #023E7D;
+  --blue-100: #0466c8;
+  --blue-200: #0353a4;
+  --blue-300: #023e7d;
   --blue-400: #002855;
   --blue-500: #001845;
-  --gray-100: #979DAC;
-  --gray-200: #7D8597;
-  --gray-300: #5C677D;
-  --gray-400: #33415C;
+  --gray-100: #979dac;
+  --gray-200: #7d8597;
+  --gray-300: #5c677d;
+  --gray-400: #33415c;
   --gray-500: #001233;
 
   /* Semantic tokens */
@@ -101,8 +113,17 @@ html {
   --sidebar-ring: var(--blue-100);
 
   /* Gradients */
-  --gradient-primary: linear-gradient(135deg, var(--blue-100) 0%, var(--blue-300) 50%, var(--blue-200) 100%);
-  --gradient-glow: linear-gradient(135deg, color-mix(in srgb, var(--blue-100) 35%, transparent) 0%, color-mix(in srgb, var(--blue-300) 35%, transparent) 100%);
+  --gradient-primary: linear-gradient(
+    135deg,
+    var(--blue-100) 0%,
+    var(--blue-300) 50%,
+    var(--blue-200) 100%
+  );
+  --gradient-glow: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--blue-100) 35%, transparent) 0%,
+    color-mix(in srgb, var(--blue-300) 35%, transparent) 100%
+  );
 
   /* Custom sizes */
   --text-6xl: 6rem;
@@ -199,7 +220,7 @@ html {
   body {
     background-color: var(--background);
     color: var(--foreground);
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: "Inter", system-ui, -apple-system, sans-serif;
   }
 }
 
@@ -273,7 +294,8 @@ html {
 }
 
 @keyframes cubeFloat {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px);
   }
   50% {
@@ -282,11 +304,14 @@ html {
 }
 
 @keyframes glow {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 20px rgba(4, 102, 200, 0.3);
   }
   50% {
-    box-shadow: 0 0 40px rgba(4, 102, 200, 0.6), 0 0 60px rgba(4, 102, 200, 0.3);
+    box-shadow:
+      0 0 40px rgba(4, 102, 200, 0.6),
+      0 0 60px rgba(4, 102, 200, 0.3);
   }
 }
 
@@ -330,12 +355,24 @@ html {
   backdrop-filter: blur(10px);
 }
 
-.cube-face-front  { transform: rotateY(0deg) translateZ(50px); }
-.cube-face-back   { transform: rotateY(180deg) translateZ(50px); }
-.cube-face-right  { transform: rotateY(90deg) translateZ(50px); }
-.cube-face-left   { transform: rotateY(-90deg) translateZ(50px); }
-.cube-face-top    { transform: rotateX(90deg) translateZ(50px); }
-.cube-face-bottom { transform: rotateX(-90deg) translateZ(50px); }
+.cube-face-front {
+  transform: rotateY(0deg) translateZ(50px);
+}
+.cube-face-back {
+  transform: rotateY(180deg) translateZ(50px);
+}
+.cube-face-right {
+  transform: rotateY(90deg) translateZ(50px);
+}
+.cube-face-left {
+  transform: rotateY(-90deg) translateZ(50px);
+}
+.cube-face-top {
+  transform: rotateX(90deg) translateZ(50px);
+}
+.cube-face-bottom {
+  transform: rotateX(-90deg) translateZ(50px);
+}
 
 /* Terminal Styles */
 .terminal-window {
@@ -350,7 +387,11 @@ html {
 }
 
 .terminal-header {
-  background: linear-gradient(to bottom, var(--gray-400), color-mix(in srgb, var(--gray-500) 80%, transparent));
+  background: linear-gradient(
+    to bottom,
+    var(--gray-400),
+    color-mix(in srgb, var(--gray-500) 80%, transparent)
+  );
   padding: 14px 20px;
   display: flex;
   align-items: center;
@@ -378,7 +419,7 @@ html {
 
 .terminal-body {
   padding: 32px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 16px;
   line-height: 1.6;
   color: var(--gray-100);
@@ -421,13 +462,24 @@ html {
 }
 
 @keyframes blink {
-  0%, 49% { opacity: 1; }
-  50%, 100% { opacity: 0; }
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
 }
 
 /* Gradient Text */
 .gradient-text {
-  background: linear-gradient(135deg, var(--blue-100) 0%, var(--blue-300) 50%, var(--blue-200) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--blue-100) 0%,
+    var(--blue-300) 50%,
+    var(--blue-200) 100%
+  );
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -458,13 +510,16 @@ html {
 
 .ascii-logo {
   display: block;
-  font-family: 'Cascadia Code', Menlo, Monaco, Consolas, 'Courier New', monospace;
+  font-family: "Cascadia Code", Menlo, Monaco, Consolas, "Courier New", monospace;
   white-space: pre;
   letter-spacing: -0.0425em;
   line-height: 1.09375;
   font-size: clamp(0.425rem, 1.25vw, 1rem);
   color: var(--blue-200);
-  transition: color 180ms ease, text-shadow 180ms ease, transform 180ms ease;
+  transition:
+    color 180ms ease,
+    text-shadow 180ms ease,
+    transform 180ms ease;
 }
 
 .ascii-logo--compact {

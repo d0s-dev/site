@@ -10,8 +10,9 @@ import { sanitizeFilename } from "./utils";
 // Local dev server URL (from `d0s catalog serve`)
 // Use import.meta.env for browser compatibility (process.env doesn't exist in browsers)
 // For client-side fetches (Scans/SBOMs), default to localhost:8080 when running in browser
-const CATALOG_SERVE_URL = import.meta.env?.CATALOG_SERVE_URL ?? 
-  (typeof window !== 'undefined' ? 'http://localhost:8080' : undefined);
+const CATALOG_SERVE_URL =
+  import.meta.env?.CATALOG_SERVE_URL ??
+  (typeof window !== "undefined" ? "http://localhost:8080" : undefined);
 
 // GitHub raw content fallback
 const APPS_BASE_URL = "https://raw.githubusercontent.com/d0s-dev/apps";
@@ -71,7 +72,6 @@ export const getGitHubBrowseUrl = (appId: string, version: string, subpath?: str
   return subpath ? `${base}/${subpath}` : base;
 };
 
-
 const cache: {
   catalog?: CatalogDataResult & { etag?: string };
   manifests: Map<
@@ -95,9 +95,7 @@ async function fetchJson<T>(input: RequestInfo | URL, init?: RequestInit) {
     throw Object.assign(new Error("Not Modified"), { status: 304 });
   }
   if (!response.ok) {
-    throw new Error(
-      `Failed to fetch ${input}: ${response.status} ${response.statusText}`,
-    );
+    throw new Error(`Failed to fetch ${input}: ${response.status} ${response.statusText}`);
   }
   return {
     etag: response.headers.get("etag") ?? undefined,
@@ -123,11 +121,7 @@ export async function fetchCatalogData(
 
   if (cached && !forceRefresh && now - cached.fetchedAt < ttlMs) {
     return {
-      source: isSSG
-        ? "remote"
-        : cached.source === "remote"
-          ? "cache"
-          : cached.source,
+      source: isSSG ? "remote" : cached.source === "remote" ? "cache" : cached.source,
       response: cached.response,
       fetchedAt: cached.fetchedAt,
     };
@@ -164,9 +158,7 @@ export async function fetchCatalogData(
         fetchedAt: cached.fetchedAt,
       };
     }
-    throw new Error(
-      `Failed to fetch catalog data: ${(error as Error).message}`
-    );
+    throw new Error(`Failed to fetch catalog data: ${(error as Error).message}`);
   }
 }
 
@@ -190,9 +182,7 @@ export async function fetchCatalogManifest(
     const url = getManifestUrl(appId);
     const isLocal = !!CATALOG_SERVE_URL;
     const result = await fetchJson<CatalogManifest>(url, {
-      headers: cacheEntry?.etag && !isLocal
-        ? { "If-None-Match": cacheEntry.etag }
-        : undefined,
+      headers: cacheEntry?.etag && !isLocal ? { "If-None-Match": cacheEntry.etag } : undefined,
       cache: "no-store",
     });
 
@@ -225,9 +215,7 @@ export async function fetchCatalogManifest(
         source: "cache",
       };
     }
-    throw new Error(
-      `Failed to fetch manifest for ${appId}: ${(error as Error).message}`
-    );
+    throw new Error(`Failed to fetch manifest for ${appId}: ${(error as Error).message}`);
   }
 }
 

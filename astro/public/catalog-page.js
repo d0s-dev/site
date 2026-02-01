@@ -36248,24 +36248,29 @@ var CopyIcon = () => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("svg", { viewB
   /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" })
 ] });
 var CheckIcon = () => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("svg", { viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2, className: "w-4 h-4", children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("polyline", { points: "20 6 9 17 4 12" }) });
-var ExternalLinkIcon = () => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("svg", { viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2, className: "w-3.5 h-3.5", children: [
-  /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" }),
-  /* @__PURE__ */ (0, import_jsx_runtime.jsx)("polyline", { points: "15 3 21 3 21 9" }),
-  /* @__PURE__ */ (0, import_jsx_runtime.jsx)("line", { x1: "10", y1: "14", x2: "21", y2: "3" })
-] });
+var ExternalLinkIcon = () => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
+  "svg",
+  {
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 2,
+    className: "w-3.5 h-3.5",
+    children: [
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("polyline", { points: "15 3 21 3 21 9" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("line", { x1: "10", y1: "14", x2: "21", y2: "3" })
+    ]
+  }
+);
 var DEFAULT_ARCHES = ["amd64", "arm64"];
-function OverviewPanel({
-  appId,
-  version: version2,
-  manifest,
-  selectedVersion
-}) {
+function OverviewPanel({ appId, version: version2, manifest, selectedVersion }) {
   const [selectedArch, setSelectedArch] = (0, import_react.useState)("amd64");
   const [copied, setCopied] = (0, import_react.useState)(false);
   const availableArches = selectedVersion.ociPackage ? Object.keys(selectedVersion.ociPackage) : DEFAULT_ARCHES;
   const ociPath = manifest.ociRegistry ? `oci://${manifest.ociRegistry}:${version2}` : `oci://ghcr.io/d0s-dev/apps/${appId}:${version2}`;
   const zarfCommand = `zarf package deploy -a ${selectedArch} ${ociPath}`;
-  const githubUrl2 = getGitHubBrowseUrl(appId, version2);
+  const githubUrl = getGitHubBrowseUrl(appId, version2);
   const images = selectedVersion.images ?? [];
   const handleCopy = (0, import_react.useCallback)(async () => {
     try {
@@ -36280,7 +36285,7 @@ function OverviewPanel({
     /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "flex items-center justify-end gap-2", children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
       "a",
       {
-        href: githubUrl2,
+        href: githubUrl,
         target: "_blank",
         rel: "noopener noreferrer",
         className: "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#023052] bg-[#001233] text-xs text-[#7EA8FF] hover:border-[#0466C8] hover:text-white transition",
@@ -36513,7 +36518,16 @@ function ImageSelector({
         className: "flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded border border-[#023052] bg-[#001233] text-[#9BA3B5] hover:text-white hover:border-[#0466C8] transition",
         children: [
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { children: buttonLabel }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("svg", { className: `w-3 h-3 transition-transform ${isOpen ? "rotate-180" : ""}`, fill: "none", viewBox: "0 0 24 24", stroke: "currentColor", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M19 9l-7 7-7-7" }) })
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+            "svg",
+            {
+              className: `w-3 h-3 transition-transform ${isOpen ? "rotate-180" : ""}`,
+              fill: "none",
+              viewBox: "0 0 24 24",
+              stroke: "currentColor",
+              children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M19 9l-7 7-7-7" })
+            }
+          )
         ]
       }
     ),
@@ -39552,18 +39566,21 @@ function useReactTable(options) {
 var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
 var SeverityBadge = ({ severity }) => {
   const colorClass = severityColors[severity.toLowerCase()] || severityColors.unknown;
-  return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: `inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${colorClass}`, children: severity });
+  return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+    "span",
+    {
+      className: `inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${colorClass}`,
+      children: severity
+    }
+  );
 };
-var GitHubIcon2 = () => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("svg", { viewBox: "0 0 16 16", fill: "currentColor", className: "w-4 h-4", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("path", { d: "M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" }) });
 function CVETable({
   data,
   loading = false,
   notAvailable = false,
   showImageSource = false
 }) {
-  const [sorting, setSorting] = (0, import_react3.useState)([
-    { id: "severity", desc: false }
-  ]);
+  const [sorting, setSorting] = (0, import_react3.useState)([{ id: "severity", desc: false }]);
   const [columnFilters, setColumnFilters] = (0, import_react3.useState)([]);
   const [pageSize, setPageSize] = (0, import_react3.useState)(25);
   const columns = (0, import_react3.useMemo)(() => {
@@ -39624,7 +39641,14 @@ function CVETable({
       cols.push({
         accessorKey: "imageSource",
         header: "Image",
-        cell: ({ getValue }) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "font-mono text-xs text-[#5C677D] truncate max-w-[150px] block", title: getValue(), children: getValue() }),
+        cell: ({ getValue }) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+          "span",
+          {
+            className: "font-mono text-xs text-[#5C677D] truncate max-w-[150px] block",
+            title: getValue(),
+            children: getValue()
+          }
+        ),
         filterFn: "includesString"
       });
     }
@@ -39648,22 +39672,7 @@ function CVETable({
     ] });
   }
   if (notAvailable) {
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "rounded-xl border border-[#023052] bg-[#001233] p-6 text-center", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "text-sm text-[#5C677D]", children: "Scans aren't available yet for this version." }),
-      githubUrl && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
-        "a",
-        {
-          href: githubUrl,
-          target: "_blank",
-          rel: "noopener noreferrer",
-          className: "inline-flex items-center gap-1.5 mt-3 text-xs text-[#7EA8FF] hover:text-white",
-          children: [
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(GitHubIcon2, {}),
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: "View on GitHub" })
-          ]
-        }
-      )
-    ] });
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "rounded-xl border border-[#023052] bg-[#001233] p-6 text-center", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "text-sm text-[#5C677D]", children: "Scans aren't available yet for this version." }) });
   }
   if (data.length === 0) {
     return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "rounded-xl border border-green-500/30 bg-green-500/10 p-6 text-center", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "text-sm text-green-400", children: "\u{1F389} No vulnerabilities found!" }) });
@@ -39767,7 +39776,9 @@ function CVETable({
 // src/components/ScansPanel.tsx
 var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
 function ScansPanel({ appId, version: version2, images }) {
-  const [selectedImages, setSelectedImages] = (0, import_react4.useState)(images.length > 0 ? [images[0]] : []);
+  const [selectedImages, setSelectedImages] = (0, import_react4.useState)(
+    images.length > 0 ? [images[0]] : []
+  );
   const [dedupEnabled, setDedupEnabled] = (0, import_react4.useState)(true);
   const [loading, setLoading] = (0, import_react4.useState)(false);
   const [cveData, setCveData] = (0, import_react4.useState)([]);
@@ -39835,7 +39846,7 @@ function ScansPanel({ appId, version: version2, images }) {
     fetchScans();
   }, [fetchScans]);
   const downloadUrl = selectedImages.length === 1 ? getScanUrl(appId, version2, selectedImages[0]) : void 0;
-  const githubUrl2 = getGitHubBrowseUrl(appId, version2, "scans");
+  const githubUrl = getGitHubBrowseUrl(appId, version2, "scans");
   const showImageSource = selectedImages.length > 1 && !dedupEnabled;
   return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "space-y-4", children: [
     /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "flex items-center justify-between gap-4", children: [
@@ -39857,7 +39868,15 @@ function ScansPanel({ appId, version: version2, images }) {
             download: true,
             className: "inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded border border-[#023052] bg-[#001233] text-[#9BA3B5] hover:text-white hover:border-[#0466C8] transition",
             children: [
-              /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("svg", { className: "w-3.5 h-3.5", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" }) }),
+              /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("svg", { className: "w-3.5 h-3.5", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+                "path",
+                {
+                  strokeLinecap: "round",
+                  strokeLinejoin: "round",
+                  strokeWidth: 2,
+                  d: "M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                }
+              ) }),
               "Download"
             ]
           }
@@ -39865,12 +39884,19 @@ function ScansPanel({ appId, version: version2, images }) {
         /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(
           "a",
           {
-            href: githubUrl2,
+            href: githubUrl,
             target: "_blank",
             rel: "noopener noreferrer",
             className: "inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded border border-[#023052] bg-[#001233] text-[#9BA3B5] hover:text-white hover:border-[#0466C8] transition",
             children: [
-              /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("svg", { className: "w-3.5 h-3.5", fill: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("path", { fillRule: "evenodd", clipRule: "evenodd", d: "M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z" }) }),
+              /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("svg", { className: "w-3.5 h-3.5", fill: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+                "path",
+                {
+                  fillRule: "evenodd",
+                  clipRule: "evenodd",
+                  d: "M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z"
+                }
+              ) }),
               "GitHub"
             ]
           }
@@ -39878,9 +39904,7 @@ function ScansPanel({ appId, version: version2, images }) {
       ] })
     ] }),
     /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "grid gap-3 grid-cols-4", children: ["critical", "high", "medium", "low"].map((severity) => {
-      const count2 = cveData.filter(
-        (cve) => cve.severity.toLowerCase() === severity
-      ).length;
+      const count2 = cveData.filter((cve) => cve.severity.toLowerCase() === severity).length;
       const colorMap = {
         critical: "text-red-400",
         high: "text-orange-400",
@@ -39923,9 +39947,7 @@ function SBOMTable({
   notAvailable = false,
   showImageSource = false
 }) {
-  const [sorting, setSorting] = (0, import_react5.useState)([
-    { id: "name", desc: false }
-  ]);
+  const [sorting, setSorting] = (0, import_react5.useState)([{ id: "name", desc: false }]);
   const [columnFilters, setColumnFilters] = (0, import_react5.useState)([]);
   const [pageSize, setPageSize] = (0, import_react5.useState)(25);
   const columns = (0, import_react5.useMemo)(() => {
@@ -39956,7 +39978,13 @@ function SBOMTable({
             apk: "bg-green-500/20 text-green-400 border-green-500/40"
           };
           const colorClass = typeColors[type.toLowerCase()] || "bg-gray-500/20 text-gray-400 border-gray-500/40";
-          return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: `inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${colorClass}`, children: type });
+          return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+            "span",
+            {
+              className: `inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${colorClass}`,
+              children: type
+            }
+          );
         },
         filterFn: "includesString"
       },
@@ -39974,7 +40002,14 @@ function SBOMTable({
       cols.push({
         accessorKey: "imageSource",
         header: "Image",
-        cell: ({ getValue }) => /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "font-mono text-xs text-[#5C677D] truncate max-w-[150px] block", title: getValue(), children: getValue() }),
+        cell: ({ getValue }) => /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+          "span",
+          {
+            className: "font-mono text-xs text-[#5C677D] truncate max-w-[150px] block",
+            title: getValue(),
+            children: getValue()
+          }
+        ),
         filterFn: "includesString"
       });
     }
@@ -40102,7 +40137,9 @@ function SBOMTable({
 // src/components/SBOMsPanel.tsx
 var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
 function SBOMsPanel({ appId, version: version2, images }) {
-  const [selectedImages, setSelectedImages] = (0, import_react6.useState)(images.length > 0 ? [images[0]] : []);
+  const [selectedImages, setSelectedImages] = (0, import_react6.useState)(
+    images.length > 0 ? [images[0]] : []
+  );
   const [dedupEnabled, setDedupEnabled] = (0, import_react6.useState)(true);
   const [loading, setLoading] = (0, import_react6.useState)(false);
   const [sbomData, setSbomData] = (0, import_react6.useState)([]);
@@ -40176,7 +40213,7 @@ function SBOMsPanel({ appId, version: version2, images }) {
   }, [fetchSBOMs]);
   const downloadUrl = selectedImages.length === 1 ? getSBOMUrl(appId, version2, selectedImages[0]) : void 0;
   const viewerUrl = selectedImages.length === 1 ? getSBOMViewerUrl(appId, version2, selectedImages[0]) : void 0;
-  const githubUrl2 = getGitHubBrowseUrl(appId, version2, "sboms");
+  const githubUrl = getGitHubBrowseUrl(appId, version2, "sboms");
   const showImageSource = selectedImages.length > 1 && !dedupEnabled;
   return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "space-y-4", children: [
     /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "flex items-center justify-between gap-4", children: [
@@ -40200,8 +40237,24 @@ function SBOMsPanel({ appId, version: version2, images }) {
             className: "inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded border border-[#023052] bg-[#001233] text-[#9BA3B5] hover:text-white hover:border-[#0466C8] transition",
             children: [
               /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("svg", { className: "w-3.5 h-3.5", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M15 12a3 3 0 11-6 0 3 3 0 016 0z" }),
-                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" })
+                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+                  "path",
+                  {
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    strokeWidth: 2,
+                    d: "M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  }
+                ),
+                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+                  "path",
+                  {
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    strokeWidth: 2,
+                    d: "M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  }
+                )
               ] }),
               "Viewer"
             ]
@@ -40214,7 +40267,15 @@ function SBOMsPanel({ appId, version: version2, images }) {
             download: true,
             className: "inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded border border-[#023052] bg-[#001233] text-[#9BA3B5] hover:text-white hover:border-[#0466C8] transition",
             children: [
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("svg", { className: "w-3.5 h-3.5", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" }) }),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("svg", { className: "w-3.5 h-3.5", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+                "path",
+                {
+                  strokeLinecap: "round",
+                  strokeLinejoin: "round",
+                  strokeWidth: 2,
+                  d: "M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                }
+              ) }),
               "Download"
             ]
           }
@@ -40222,12 +40283,19 @@ function SBOMsPanel({ appId, version: version2, images }) {
         /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
           "a",
           {
-            href: githubUrl2,
+            href: githubUrl,
             target: "_blank",
             rel: "noopener noreferrer",
             className: "inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded border border-[#023052] bg-[#001233] text-[#9BA3B5] hover:text-white hover:border-[#0466C8] transition",
             children: [
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("svg", { className: "w-3.5 h-3.5", fill: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("path", { fillRule: "evenodd", clipRule: "evenodd", d: "M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z" }) }),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("svg", { className: "w-3.5 h-3.5", fill: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+                "path",
+                {
+                  fillRule: "evenodd",
+                  clipRule: "evenodd",
+                  d: "M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z"
+                }
+              ) }),
               "GitHub"
             ]
           }
@@ -40272,9 +40340,7 @@ var sourceLabelMap = {
   local: "Local dev server"
 };
 function buildOverlayElements() {
-  const overlay = document.querySelector(
-    "[data-manifest-overlay]"
-  );
+  const overlay = document.querySelector("[data-manifest-overlay]");
   return {
     overlay,
     overlayBackdrop: overlay?.querySelector("[data-overlay-backdrop]") ?? null,
@@ -40294,9 +40360,7 @@ function buildOverlayElements() {
     overlayContent: overlay?.querySelector("[data-overlay-content]") ?? null,
     providerSelect: overlay?.querySelector("[data-overlay-provider]") ?? null,
     versionSelect: overlay?.querySelector("[data-overlay-version]") ?? null,
-    tabButtons: overlay ? Array.from(
-      overlay.querySelectorAll("[data-overlay-tab]")
-    ) : [],
+    tabButtons: overlay ? Array.from(overlay.querySelectorAll("[data-overlay-tab]")) : [],
     tabContent: overlay?.querySelector("[data-overlay-tab-content]") ?? null
   };
 }
@@ -40331,22 +40395,12 @@ function initFilters() {
   const providerButtons = Array.from(
     document.querySelectorAll("[data-filter-provider]")
   );
-  const labelSelect = document.querySelector(
-    "[data-filter-label-select]"
-  );
-  const providerSelect = document.querySelector(
-    "[data-filter-provider-select]"
-  );
-  const searchInput = document.querySelector(
-    "[data-filter-search]"
-  );
-  const cards = Array.from(
-    document.querySelectorAll("[data-catalog-card]")
-  );
+  const labelSelect = document.querySelector("[data-filter-label-select]");
+  const providerSelect = document.querySelector("[data-filter-provider-select]");
+  const searchInput = document.querySelector("[data-filter-search]");
+  const cards = Array.from(document.querySelectorAll("[data-catalog-card]"));
   const emptyState = document.querySelector("[data-empty-state]");
-  const activeCountTarget = document.querySelector(
-    "[data-active-count]"
-  );
+  const activeCountTarget = document.querySelector("[data-active-count]");
   const state = {
     label: labelSelect?.value ?? "all",
     provider: providerSelect?.value ?? "all",
@@ -40439,9 +40493,7 @@ function initFilters() {
   }
   if (searchInput) {
     searchInput.addEventListener("input", (event) => {
-      const value = String(
-        event.target.value ?? ""
-      ).toLowerCase();
+      const value = String(event.target.value ?? "").toLowerCase();
       state.search = value.trim();
       applyFilters();
     });
@@ -40451,9 +40503,7 @@ function initFilters() {
 function initChart() {
   const chartCanvas = document.querySelector("[data-cve-chart]");
   if (!chartCanvas) return;
-  const payload = parseJsonPayload(
-    "#catalog-cve-data"
-  );
+  const payload = parseJsonPayload("#catalog-cve-data");
   if (!payload) return;
   const context = chartCanvas.getContext("2d");
   if (!context) return;
@@ -40544,9 +40594,7 @@ function renderTabContent(overlayState, elements2) {
     const images2 = (selectedVersion.images || []).map((img) => img.name);
     if (appId && version2) {
       scansRoot = (0, import_client.createRoot)(wrapper);
-      scansRoot.render(
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(ScansPanel, { appId, version: version2, images: images2 })
-      );
+      scansRoot.render(/* @__PURE__ */ (0, import_jsx_runtime7.jsx)(ScansPanel, { appId, version: version2, images: images2 }));
     }
   } else if (overlayState.tab === "sboms") {
     const wrapper = document.createElement("div");
@@ -40561,9 +40609,7 @@ function renderTabContent(overlayState, elements2) {
     const images2 = (selectedVersion.images || []).map((img) => img.name);
     if (appId && version2) {
       sbomsRoot = (0, import_client.createRoot)(wrapper);
-      sbomsRoot.render(
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(SBOMsPanel, { appId, version: version2, images: images2 })
-      );
+      sbomsRoot.render(/* @__PURE__ */ (0, import_jsx_runtime7.jsx)(SBOMsPanel, { appId, version: version2, images: images2 }));
     }
   }
 }
@@ -40689,18 +40735,9 @@ function lockScroll(locked) {
   document.body.classList.toggle("overflow-hidden", locked);
 }
 function attachOverlayHandlers(overlayState, elements2, catalogViewModelMap) {
-  const {
-    overlay,
-    overlayBackdrop,
-    overlayClose,
-    providerSelect,
-    versionSelect,
-    tabButtons
-  } = elements2;
+  const { overlay, overlayBackdrop, overlayClose, providerSelect, versionSelect, tabButtons } = elements2;
   if (!overlay) return;
-  const cards = Array.from(
-    document.querySelectorAll("[data-catalog-card]")
-  );
+  const cards = Array.from(document.querySelectorAll("[data-catalog-card]"));
   const resetOverlay = () => {
     overlayState.appId = null;
     overlayState.manifestResult = null;
@@ -40709,13 +40746,10 @@ function attachOverlayHandlers(overlayState, elements2, catalogViewModelMap) {
     overlayState.imageIndex = 0;
     overlayState.tab = "overview";
     overlayState.viewModel = null;
-    if (elements2.overlayContent)
-      elements2.overlayContent.classList.add("hidden");
+    if (elements2.overlayContent) elements2.overlayContent.classList.add("hidden");
     if (elements2.overlayError) elements2.overlayError.classList.add("hidden");
-    if (elements2.overlayLoading)
-      elements2.overlayLoading.classList.remove("hidden");
-    if (elements2.overlayStatus)
-      elements2.overlayStatus.textContent = "Loading manifest\u2026";
+    if (elements2.overlayLoading) elements2.overlayLoading.classList.remove("hidden");
+    if (elements2.overlayStatus) elements2.overlayStatus.textContent = "Loading manifest\u2026";
     if (elements2.tabContent) elements2.tabContent.innerHTML = "";
     tabButtons.forEach((button) => {
       button.dataset.active = button.dataset.overlayTab === "overview" ? "true" : "false";
@@ -40776,13 +40810,10 @@ function attachOverlayHandlers(overlayState, elements2, catalogViewModelMap) {
     overlay.classList.remove("hidden");
     overlay.setAttribute("aria-hidden", "false");
     lockScroll(true);
-    if (elements2.overlayLoading)
-      elements2.overlayLoading.classList.remove("hidden");
-    if (elements2.overlayContent)
-      elements2.overlayContent.classList.add("hidden");
+    if (elements2.overlayLoading) elements2.overlayLoading.classList.remove("hidden");
+    if (elements2.overlayContent) elements2.overlayContent.classList.add("hidden");
     if (elements2.overlayError) elements2.overlayError.classList.add("hidden");
-    if (elements2.overlayStatus)
-      elements2.overlayStatus.textContent = "Loading manifest\u2026";
+    if (elements2.overlayStatus) elements2.overlayStatus.textContent = "Loading manifest\u2026";
     try {
       const response = await fetch(`/api/catalog/${encodeURIComponent(appId)}`);
       if (!response.ok) {
@@ -40792,10 +40823,8 @@ function attachOverlayHandlers(overlayState, elements2, catalogViewModelMap) {
       overlayState.manifestResult = payload;
       renderOverlay(overlayState, elements2);
     } catch (error) {
-      if (elements2.overlayLoading)
-        elements2.overlayLoading.classList.add("hidden");
-      if (elements2.overlayError)
-        elements2.overlayError.classList.remove("hidden");
+      if (elements2.overlayLoading) elements2.overlayLoading.classList.add("hidden");
+      if (elements2.overlayError) elements2.overlayError.classList.remove("hidden");
       if (elements2.overlayErrorMessage) {
         const message = error instanceof Error ? error.message : "Unknown manifest error";
         elements2.overlayErrorMessage.textContent = message;
@@ -40814,10 +40843,7 @@ function attachOverlayHandlers(overlayState, elements2, catalogViewModelMap) {
     void openOverlay(card);
   };
   cards.forEach((card) => {
-    card.addEventListener(
-      "click",
-      (event) => handleCardActivation(event, card)
-    );
+    card.addEventListener("click", (event) => handleCardActivation(event, card));
     card.addEventListener("keydown", (event) => {
       if (event.key === "Enter" || event.key === " ") {
         handleCardActivation(event, card);

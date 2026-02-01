@@ -1,30 +1,32 @@
 :root {
   /* Match brand colors from global.css */
-  --sl-color-accent: var(--blue-100, #0466C8);
-  --sl-color-accent-dark: var(--blue-300, #023E7D);
+  --sl-color-accent: var(--blue-100, #0466c8);
+  --sl-color-accent-dark: var(--blue-300, #023e7d);
   --sl-color-background: var(--gray-500, #001233);
   --sl-color-text: #ffffff;
-  --sl-color-text-muted: var(--gray-200, #7D8597);
-  --sl-color-gray-1: var(--gray-200, #7D8597);
-  --sl-color-gray-2: var(--gray-300, #5C677D);
-  --sl-color-gray-3: var(--gray-400, #33415C);
+  --sl-color-text-muted: var(--gray-200, #7d8597);
+  --sl-color-gray-1: var(--gray-200, #7d8597);
+  --sl-color-gray-2: var(--gray-300, #5c677d);
+  --sl-color-gray-3: var(--gray-400, #33415c);
   --sl-color-gray-4: var(--blue-400, #002855);
   --sl-color-gray-5: var(--blue-500, #001845);
   --sl-color-gray-6: var(--gray-500, #001233);
   --sl-border-radius: 0.75rem;
   --sl-font-body: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --sl-font-display: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
-  --astro-code-color-text: var(--gray-100, #979DAC);
-  --astro-code-color-background: var(--gray-400, #33415C);
+  --sl-font-display:
+    "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono",
+    monospace;
+  --astro-code-color-text: var(--gray-100, #979dac);
+  --astro-code-color-background: var(--gray-400, #33415c);
   --astro-code-token-constant: #4cc9f0;
   --astro-code-token-string: #6be09f;
-  --astro-code-token-comment: var(--gray-300, #5C677D);
+  --astro-code-token-comment: var(--gray-300, #5c677d);
   --astro-code-token-keyword: #ffd166;
   --astro-code-token-parameter: #f9dec9;
   --astro-code-token-function: #b5179e;
   --astro-code-token-string-expression: #6be09f;
-  --astro-code-token-punctuation: var(--gray-200, #7D8597);
-  --astro-code-token-link: var(--blue-100, #0466C8);
+  --astro-code-token-punctuation: var(--gray-200, #7d8597);
+  --astro-code-token-link: var(--blue-100, #0466c8);
 }
 
 :root[data-theme="light"] {
@@ -33,7 +35,7 @@
   --sl-color-text-muted: #4a5670;
   --astro-code-color-text: #15223b;
   --astro-code-color-background: #eef4ff;
-  --astro-code-token-constant: var(--blue-100, #0466C8);
+  --astro-code-token-constant: var(--blue-100, #0466c8);
   --astro-code-token-string: #007f5f;
   --astro-code-token-comment: #718096;
   --astro-code-token-keyword: #9b2c9c;
@@ -41,7 +43,7 @@
   --astro-code-token-function: #0050b3;
   --astro-code-token-string-expression: #007f5f;
   --astro-code-token-punctuation: #4a5670;
-  --astro-code-token-link: var(--blue-100, #0466C8);
+  --astro-code-token-link: var(--blue-100, #0466c8);
 }
 
 :root[data-theme="dark"] {
@@ -69,7 +71,11 @@ body {
 }
 
 .sl-doc-page main {
-  background: linear-gradient(180deg, color-mix(in srgb, var(--blue-400, #002855) 15%, transparent) 0%, transparent 40%);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--blue-400, #002855) 15%, transparent) 0%,
+    transparent 40%
+  );
 }
 
 /* Sidebar styling */
@@ -86,14 +92,14 @@ body {
 }
 
 .sl-sidebar a[aria-current="page"] {
-  background: color-mix(in srgb, var(--gray-400, #33415C) 75%, transparent);
-  border: 1px solid color-mix(in srgb, var(--blue-300, #023E7D) 40%, transparent);
+  background: color-mix(in srgb, var(--gray-400, #33415c) 75%, transparent);
+  border: 1px solid color-mix(in srgb, var(--blue-300, #023e7d) 40%, transparent);
   color: #ffffff;
   font-weight: 500;
 }
 
 .sl-link-button.primary {
-  background: linear-gradient(135deg, var(--blue-100, #0466C8) 0%, var(--blue-300, #023E7D) 100%);
+  background: linear-gradient(135deg, var(--blue-100, #0466c8) 0%, var(--blue-300, #023e7d) 100%);
   border: none;
   color: #ffffff;
   font-weight: 600;
@@ -102,25 +108,26 @@ body {
 .sl-link-button.primary:hover {
   filter: brightness(1.1);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px color-mix(in srgb, var(--blue-100, #0466C8) 40%, transparent);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--blue-100, #0466c8) 40%, transparent);
 }
 
-pre, code {
+pre,
+code {
   border-radius: 0.75rem;
 }
 
 .sl-markdown pre {
   background: var(--astro-code-color-background);
-  border: 1px solid color-mix(in srgb, var(--blue-300, #023E7D) 45%, transparent);
+  border: 1px solid color-mix(in srgb, var(--blue-300, #023e7d) 45%, transparent);
   box-shadow: 0 24px 60px color-mix(in srgb, var(--gray-500, #001233) 18%, transparent);
 }
 
 .sl-markdown code:not(pre code) {
-  background: color-mix(in srgb, var(--gray-400, #33415C) 65%, transparent);
+  background: color-mix(in srgb, var(--gray-400, #33415c) 65%, transparent);
   color: #ffffff;
   padding: 0.125rem 0.4rem;
   border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--blue-300, #023E7D) 40%, transparent);
+  border: 1px solid color-mix(in srgb, var(--blue-300, #023e7d) 40%, transparent);
 }
 
 .sl-markdown pre code {
@@ -130,11 +137,15 @@ pre, code {
 
 site-search button[data-open-modal] {
   border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--blue-300, #023E7D) 40%, transparent);
-  background: color-mix(in srgb, var(--gray-400, #33415C) 65%, transparent);
+  border: 1px solid color-mix(in srgb, var(--blue-300, #023e7d) 40%, transparent);
+  background: color-mix(in srgb, var(--gray-400, #33415c) 65%, transparent);
   color: #ffffff;
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--gray-400, #33415C) 30%, transparent);
-  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--gray-400, #33415c) 30%, transparent);
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
   padding: 0.5rem 1rem;
   min-width: 300px;
   width: 100%;
@@ -142,31 +153,34 @@ site-search button[data-open-modal] {
 
 site-search button[data-open-modal]:hover,
 site-search button[data-open-modal]:focus-visible {
-  border-color: color-mix(in srgb, var(--blue-100, #0466C8) 60%, transparent);
-  background: color-mix(in srgb, var(--blue-100, #0466C8) 30%, transparent);
+  border-color: color-mix(in srgb, var(--blue-100, #0466c8) 60%, transparent);
+  background: color-mix(in srgb, var(--blue-100, #0466c8) 30%, transparent);
   color: #ffffff;
   transform: translateY(-1px);
 }
 
 site-search button[data-open-modal] kbd {
   border-radius: 0.5rem;
-  border: 1px solid color-mix(in srgb, var(--blue-300, #023E7D) 40%, transparent);
-  background: color-mix(in srgb, var(--gray-400, #33415C) 60%, transparent);
+  border: 1px solid color-mix(in srgb, var(--blue-300, #023e7d) 40%, transparent);
+  background: color-mix(in srgb, var(--gray-400, #33415c) 60%, transparent);
   color: inherit;
 }
 
 starlight-theme-select label {
   border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--blue-300, #023E7D) 40%, transparent);
-  background: color-mix(in srgb, var(--gray-400, #33415C) 65%, transparent);
+  border: 1px solid color-mix(in srgb, var(--blue-300, #023e7d) 40%, transparent);
+  background: color-mix(in srgb, var(--gray-400, #33415c) 65%, transparent);
   color: #ffffff;
-  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
 }
 
 starlight-theme-select label:hover,
 starlight-theme-select label:focus-within {
-  border-color: color-mix(in srgb, var(--blue-100, #0466C8) 60%, transparent);
-  background: color-mix(in srgb, var(--blue-100, #0466C8) 30%, transparent);
+  border-color: color-mix(in srgb, var(--blue-100, #0466c8) 60%, transparent);
+  background: color-mix(in srgb, var(--blue-100, #0466c8) 30%, transparent);
   transform: translateY(-1px);
 }
 
@@ -190,11 +204,11 @@ starlight-theme-select select {
 
 .sl-markdown-content p,
 .sl-markdown-content li {
-  color: var(--gray-100, #979DAC);
+  color: var(--gray-100, #979dac);
 }
 
 .sl-markdown-content a {
-  color: var(--blue-100, #0466C8);
+  color: var(--blue-100, #0466c8);
   text-decoration: none;
   transition: color 0.2s ease;
 }
@@ -221,15 +235,15 @@ starlight-theme-select select {
 
 /* Pagination buttons */
 .pagination-links a {
-  border: 1px solid color-mix(in srgb, var(--blue-300, #023E7D) 40%, transparent);
-  background: color-mix(in srgb, var(--gray-400, #33415C) 65%, transparent);
+  border: 1px solid color-mix(in srgb, var(--blue-300, #023e7d) 40%, transparent);
+  background: color-mix(in srgb, var(--gray-400, #33415c) 65%, transparent);
   color: #ffffff;
   transition: all 0.2s ease;
 }
 
 .pagination-links a:hover {
-  border-color: color-mix(in srgb, var(--blue-100, #0466C8) 60%, transparent);
-  background: color-mix(in srgb, var(--blue-100, #0466C8) 30%, transparent);
+  border-color: color-mix(in srgb, var(--blue-100, #0466c8) 60%, transparent);
+  background: color-mix(in srgb, var(--blue-100, #0466c8) 30%, transparent);
   transform: translateY(-2px);
 }
 
@@ -243,13 +257,16 @@ starlight-theme-select select {
 .header-version-switcher select {
   appearance: none;
   border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--blue-300, #023E7D) 40%, transparent);
-  background: color-mix(in srgb, var(--gray-400, #33415C) 65%, transparent);
+  border: 1px solid color-mix(in srgb, var(--blue-300, #023e7d) 40%, transparent);
+  background: color-mix(in srgb, var(--gray-400, #33415c) 65%, transparent);
   color: #ffffff;
   padding: 0.375rem 2rem 0.375rem 0.75rem;
   font-size: 0.875rem;
   cursor: pointer;
-  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%230466C8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0.5rem center;
@@ -258,8 +275,8 @@ starlight-theme-select select {
 
 .header-version-switcher select:hover,
 .header-version-switcher select:focus {
-  border-color: color-mix(in srgb, var(--blue-100, #0466C8) 60%, transparent);
-  background-color: color-mix(in srgb, var(--blue-100, #0466C8) 30%, transparent);
+  border-color: color-mix(in srgb, var(--blue-100, #0466c8) 60%, transparent);
+  background-color: color-mix(in srgb, var(--blue-100, #0466c8) 30%, transparent);
   transform: translateY(-1px);
   outline: none;
 }
@@ -275,17 +292,20 @@ starlight-theme-select select {
 }
 
 .header .site-title .ascii-logo {
-  font-family: 'Cascadia Code', Menlo, Monaco, Consolas, 'Courier New', monospace !important;
+  font-family: "Cascadia Code", Menlo, Monaco, Consolas, "Courier New", monospace !important;
   white-space: pre !important;
   letter-spacing: -0.0425em !important;
   line-height: 1.09375 !important;
   font-size: clamp(0.35rem, 1vw, 0.8rem) !important;
-  color: var(--blue-200, #61A5C2) !important;
+  color: var(--blue-200, #61a5c2) !important;
   margin: 0 !important;
-  transition: color 180ms ease, text-shadow 180ms ease, transform 180ms ease !important;
+  transition:
+    color 180ms ease,
+    text-shadow 180ms ease,
+    transform 180ms ease !important;
 }
 
 .header .site-title:hover .ascii-logo {
-  color: var(--blue-100, #0466C8) !important;
-  text-shadow: 0 0 18px color-mix(in srgb, var(--blue-100, #0466C8) 55%, transparent) !important;
+  color: var(--blue-100, #0466c8) !important;
+  text-shadow: 0 0 18px color-mix(in srgb, var(--blue-100, #0466c8) 55%, transparent) !important;
 }

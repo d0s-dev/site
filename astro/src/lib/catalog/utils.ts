@@ -6,7 +6,7 @@
  * Sanitize an image reference for use in filenames.
  * Replaces only `/` and `:` with underscore, preserving dots.
  * Matches the actual file naming used by Syft/Zarf for SBOM files.
- * 
+ *
  * Example: "xpkg.crossplane.io/crossplane/crossplane:v2.1.3"
  *       -> "xpkg.crossplane.io_crossplane_crossplane_v2.1.3"
  */

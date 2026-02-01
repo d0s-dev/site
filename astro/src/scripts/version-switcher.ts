@@ -1,14 +1,10 @@
 function initVersionSwitcher() {
   if (typeof document === "undefined") return;
 
-  const switchers = Array.from(
-    document.querySelectorAll<HTMLElement>("[data-version-switcher]"),
-  );
+  const switchers = Array.from(document.querySelectorAll<HTMLElement>("[data-version-switcher]"));
 
   switchers.forEach((container) => {
-    const select = container.querySelector<HTMLSelectElement>(
-      "[data-version-select]",
-    );
+    const select = container.querySelector<HTMLSelectElement>("[data-version-select]");
     if (!select) return;
 
     select.addEventListener("change", () => {

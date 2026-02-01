@@ -15,7 +15,7 @@ const sumSeverity = (apps: CatalogApp[]): CVESummary => {
       }
       return acc;
     },
-    { critical: 0, high: 0, medium: 0, low: 0 }
+    { critical: 0, high: 0, medium: 0, low: 0 },
   );
 };
 
@@ -50,14 +50,17 @@ const totalBuilds = catalogApps.reduce((acc, app) => acc + (app.imageCount ?? 0)
 const formatNumber = (value: number) =>
   new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(value);
 
-const lastUpdatedIso = catalogResponse.lastUpdated ?? new Date(catalogResult.fetchedAt).toISOString();
+const lastUpdatedIso =
+  catalogResponse.lastUpdated ?? new Date(catalogResult.fetchedAt).toISOString();
 const formattedLastUpdated = formatDate(lastUpdatedIso);
 
 const severityTotals = sumSeverity(catalogApps);
 
 const labelOptions = [
   "all",
-  ...Array.from(new Set(catalogApps.flatMap((app) => app.labels ?? []))).sort((a, b) => a.localeCompare(b)),
+  ...Array.from(new Set(catalogApps.flatMap((app) => app.labels ?? []))).sort((a, b) =>
+    a.localeCompare(b),
+  ),
 ];
 
 // Dynamic provider options based on what's actually in the catalog
@@ -66,10 +69,17 @@ catalogApps.forEach((app) => (app.providers ?? []).forEach((p) => allProviders.a
 
 const providerOptions: Array<{ value: string; label: string }> = [
   { value: "all", label: "All providers" },
-  ...Array.from(allProviders).sort().map((p) => ({
-    value: p,
-    label: p === "ironbank" ? "Iron Bank" : p === "chainguard" ? "Chainguard" : p.charAt(0).toUpperCase() + p.slice(1),
-  })),
+  ...Array.from(allProviders)
+    .sort()
+    .map((p) => ({
+      value: p,
+      label:
+        p === "ironbank"
+          ? "Iron Bank"
+          : p === "chainguard"
+            ? "Chainguard"
+            : p.charAt(0).toUpperCase() + p.slice(1),
+    })),
 ];
 
 const mapAppToSearchText = (app: CatalogApp) =>
@@ -113,15 +123,10 @@ const cveChartPayload = {
 };
 
 const severityToString = (severity: CVESummary | undefined) =>
-  severityOrder
-    .map((key) => severity?.[key] ?? 0)
-    .join(" / ");
+  severityOrder.map((key) => severity?.[key] ?? 0).join(" / ");
 
 const serializeJson = (input: unknown) =>
-  JSON.stringify(input)
-    .replace(/</g, "\\u003c")
-    .replace(/>/g, "\\u003e")
-    .replace(/&/g, "\\u0026");
+  JSON.stringify(input).replace(/</g, "\\u003c").replace(/>/g, "\\u003e").replace(/&/g, "\\u0026");
 ---
 
 <BaseLayout

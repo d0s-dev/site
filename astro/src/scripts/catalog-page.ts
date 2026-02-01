@@ -97,58 +97,33 @@ type OverlayElements = {
 };
 
 function buildOverlayElements(): OverlayElements {
-  const overlay = document.querySelector<HTMLElement>(
-    "[data-manifest-overlay]",
-  );
+  const overlay = document.querySelector<HTMLElement>("[data-manifest-overlay]");
 
   return {
     overlay,
-    overlayBackdrop:
-      overlay?.querySelector<HTMLElement>("[data-overlay-backdrop]") ?? null,
-    overlayClose:
-      overlay?.querySelector<HTMLElement>("[data-overlay-close]") ?? null,
-    overlayTitle:
-      overlay?.querySelector<HTMLElement>("[data-overlay-title]") ?? null,
-    overlaySummary:
-      overlay?.querySelector<HTMLElement>("[data-overlay-summary]") ?? null,
-    overlayLabels:
-      overlay?.querySelector<HTMLElement>("[data-overlay-labels]") ?? null,
-    overlaySource:
-      overlay?.querySelector<HTMLElement>("[data-overlay-source]") ?? null,
-    overlayUpdated:
-      overlay?.querySelector<HTMLElement>("[data-overlay-updated]") ?? null,
-    overlayLatest:
-      overlay?.querySelector<HTMLElement>("[data-overlay-latest]") ?? null,
-    overlayImages:
-      overlay?.querySelector<HTMLElement>("[data-overlay-images]") ?? null,
-    overlayProviders:
-      overlay?.querySelector<HTMLElement>("[data-overlay-providers]") ?? null,
-    overlayLoading:
-      overlay?.querySelector<HTMLElement>("[data-overlay-loading]") ?? null,
-    overlayStatus:
-      overlay?.querySelector<HTMLElement>("[data-overlay-status]") ?? null,
-    overlayError:
-      overlay?.querySelector<HTMLElement>("[data-overlay-error]") ?? null,
+    overlayBackdrop: overlay?.querySelector<HTMLElement>("[data-overlay-backdrop]") ?? null,
+    overlayClose: overlay?.querySelector<HTMLElement>("[data-overlay-close]") ?? null,
+    overlayTitle: overlay?.querySelector<HTMLElement>("[data-overlay-title]") ?? null,
+    overlaySummary: overlay?.querySelector<HTMLElement>("[data-overlay-summary]") ?? null,
+    overlayLabels: overlay?.querySelector<HTMLElement>("[data-overlay-labels]") ?? null,
+    overlaySource: overlay?.querySelector<HTMLElement>("[data-overlay-source]") ?? null,
+    overlayUpdated: overlay?.querySelector<HTMLElement>("[data-overlay-updated]") ?? null,
+    overlayLatest: overlay?.querySelector<HTMLElement>("[data-overlay-latest]") ?? null,
+    overlayImages: overlay?.querySelector<HTMLElement>("[data-overlay-images]") ?? null,
+    overlayProviders: overlay?.querySelector<HTMLElement>("[data-overlay-providers]") ?? null,
+    overlayLoading: overlay?.querySelector<HTMLElement>("[data-overlay-loading]") ?? null,
+    overlayStatus: overlay?.querySelector<HTMLElement>("[data-overlay-status]") ?? null,
+    overlayError: overlay?.querySelector<HTMLElement>("[data-overlay-error]") ?? null,
     overlayErrorMessage:
-      overlay?.querySelector<HTMLElement>("[data-overlay-error-message]") ??
-      null,
-    overlayContent:
-      overlay?.querySelector<HTMLElement>("[data-overlay-content]") ?? null,
-    providerSelect:
-      overlay?.querySelector<HTMLSelectElement>("[data-overlay-provider]") ??
-      null,
-    versionSelect:
-      overlay?.querySelector<HTMLSelectElement>("[data-overlay-version]") ??
-      null,
-    imageList:
-      overlay?.querySelector<HTMLElement>("[data-overlay-image-list]") ?? null,
+      overlay?.querySelector<HTMLElement>("[data-overlay-error-message]") ?? null,
+    overlayContent: overlay?.querySelector<HTMLElement>("[data-overlay-content]") ?? null,
+    providerSelect: overlay?.querySelector<HTMLSelectElement>("[data-overlay-provider]") ?? null,
+    versionSelect: overlay?.querySelector<HTMLSelectElement>("[data-overlay-version]") ?? null,
+    imageList: overlay?.querySelector<HTMLElement>("[data-overlay-image-list]") ?? null,
     tabButtons: overlay
-      ? Array.from(
-          overlay.querySelectorAll<HTMLButtonElement>("[data-overlay-tab]"),
-        )
+      ? Array.from(overlay.querySelectorAll<HTMLButtonElement>("[data-overlay-tab]"))
       : [],
-    tabContent:
-      overlay?.querySelector<HTMLElement>("[data-overlay-tab-content]") ?? null,
+    tabContent: overlay?.querySelector<HTMLElement>("[data-overlay-tab-content]") ?? null,
   };
 }
 
@@ -188,22 +163,12 @@ function initFilters() {
   const providerButtons = Array.from(
     document.querySelectorAll<HTMLButtonElement>("[data-filter-provider]"),
   );
-  const labelSelect = document.querySelector<HTMLSelectElement>(
-    "[data-filter-label-select]",
-  );
-  const providerSelect = document.querySelector<HTMLSelectElement>(
-    "[data-filter-provider-select]",
-  );
-  const searchInput = document.querySelector<HTMLInputElement>(
-    "[data-filter-search]",
-  );
-  const cards = Array.from(
-    document.querySelectorAll<HTMLElement>("[data-catalog-card]"),
-  );
+  const labelSelect = document.querySelector<HTMLSelectElement>("[data-filter-label-select]");
+  const providerSelect = document.querySelector<HTMLSelectElement>("[data-filter-provider-select]");
+  const searchInput = document.querySelector<HTMLInputElement>("[data-filter-search]");
+  const cards = Array.from(document.querySelectorAll<HTMLElement>("[data-catalog-card]"));
   const emptyState = document.querySelector<HTMLElement>("[data-empty-state]");
-  const activeCountTarget = document.querySelector<HTMLElement>(
-    "[data-active-count]",
-  );
+  const activeCountTarget = document.querySelector<HTMLElement>("[data-active-count]");
 
   const state = {
     label: labelSelect?.value ?? "all",
@@ -214,8 +179,7 @@ function initFilters() {
   const setActiveButton = (buttons: HTMLButtonElement[], value: string) => {
     buttons.forEach((button) => {
       const isActive =
-        button.dataset.filterLabel === value ||
-        button.dataset.filterProvider === value;
+        button.dataset.filterLabel === value || button.dataset.filterProvider === value;
       button.dataset.active = isActive ? "true" : "false";
       button.setAttribute("aria-pressed", isActive ? "true" : "false");
     });
@@ -226,13 +190,10 @@ function initFilters() {
 
     cards.forEach((card) => {
       const labels = (card.dataset.labels || "").split(",").filter(Boolean);
-      const providers = (card.dataset.providerList || "")
-        .split(",")
-        .filter(Boolean);
+      const providers = (card.dataset.providerList || "").split(",").filter(Boolean);
       const searchText = (card.dataset.searchText || "").toLowerCase();
 
-      const matchesLabel =
-        state.label === "all" || labels.includes(state.label);
+      const matchesLabel = state.label === "all" || labels.includes(state.label);
 
       // Dynamic provider matching - checks if provider is in the providers array
       let matchesProvider = true;
@@ -319,9 +280,7 @@ function initFilters() {
 
   if (searchInput) {
     searchInput.addEventListener("input", (event) => {
-      const value = String(
-        (event.target as HTMLInputElement).value ?? "",
-      ).toLowerCase();
+      const value = String((event.target as HTMLInputElement).value ?? "").toLowerCase();
       state.search = value.trim();
       applyFilters();
     });
@@ -331,14 +290,10 @@ function initFilters() {
 }
 
 function initChart() {
-  const chartCanvas =
-    document.querySelector<HTMLCanvasElement>("[data-cve-chart]");
+  const chartCanvas = document.querySelector<HTMLCanvasElement>("[data-cve-chart]");
   if (!chartCanvas) return;
 
-  const payload =
-    parseJsonPayload<ChartData<"doughnut", number[], string>>(
-      "#catalog-cve-data",
-    );
+  const payload = parseJsonPayload<ChartData<"doughnut", number[], string>>("#catalog-cve-data");
   if (!payload) return;
 
   const context = chartCanvas.getContext("2d");
@@ -370,10 +325,7 @@ function formatSeverity(summary: SeveritySummary): string {
   return severityKeys.map((key) => summary?.[key] ?? 0).join(" / ");
 }
 
-function renderTabContent(
-  overlayState: OverlayState,
-  elements: OverlayElements,
-): void {
+function renderTabContent(overlayState: OverlayState, elements: OverlayElements): void {
   const { tabContent } = elements;
 
   if (!tabContent) return;
@@ -443,11 +395,9 @@ function renderTabContent(
     // V2: Show OCI package links if available
     if (selectedVersion.ociPackage) {
       const linksWrapper = document.createElement("div");
-      linksWrapper.className =
-        "space-y-2 rounded-2xl border border-[#023052] bg-[#001233] p-4";
+      linksWrapper.className = "space-y-2 rounded-2xl border border-[#023052] bg-[#001233] p-4";
       const linksTitle = document.createElement("p");
-      linksTitle.className =
-        "text-xs uppercase tracking-[0.2em] text-[#5C677D]";
+      linksTitle.className = "text-xs uppercase tracking-[0.2em] text-[#5C677D]";
       linksTitle.textContent = "OCI Packages";
       linksWrapper.append(linksTitle);
 
@@ -480,8 +430,7 @@ function renderTabContent(
 
     severityKeys.forEach((key) => {
       const card = document.createElement("div");
-      card.className =
-        "rounded-2xl border border-[#023052] bg-[#001233] p-4 text-center";
+      card.className = "rounded-2xl border border-[#023052] bg-[#001233] p-4 text-center";
       const label = document.createElement("p");
       label.className = "text-xs uppercase tracking-[0.2em] text-[#5C677D]";
       label.textContent = key;
@@ -500,39 +449,38 @@ function renderTabContent(
     if (!selectedVersion.aggregates) {
       const hint = document.createElement("p");
       hint.className = "text-xs text-[#5C677D]";
-      hint.textContent =
-        "Detailed CVE listings are not available for this version yet.";
+      hint.textContent = "Detailed CVE listings are not available for this version yet.";
       wrapper.append(hint);
     } else {
       // Add CVE details section with lazy loading
       const detailsSection = document.createElement("div");
       detailsSection.className = "mt-4";
-      
+
       const loadButton = document.createElement("button");
       loadButton.className =
         "inline-flex items-center gap-2 rounded-full border border-[#023052] bg-[#001233] px-4 py-2 text-sm text-[#7EA8FF] transition hover:border-[#0466C8] hover:text-white";
       loadButton.textContent = "Load CVE Details";
       loadButton.dataset.cveLoader = "true";
-      
+
       const cveListContainer = document.createElement("div");
       cveListContainer.className = "mt-4 hidden";
       cveListContainer.dataset.cveList = "true";
-      
+
       loadButton.addEventListener("click", async () => {
         loadButton.textContent = "Loading...";
         loadButton.disabled = true;
-        
+
         try {
           const { getCVEsForVersion, getNVDLink } = await import("../lib/catalog/cve-source");
           const appId = overlayState.appId;
           const version = selectedVersion.version;
-          
+
           if (!appId) {
             throw new Error("Missing app context");
           }
-          
+
           const cves = await getCVEsForVersion(appId, version);
-          
+
           if (cves.length === 0) {
             cveListContainer.innerHTML = `
               <p class="text-sm text-[#5C677D]">No detailed CVE data available in the central database.</p>
@@ -540,7 +488,7 @@ function renderTabContent(
           } else {
             const table = document.createElement("div");
             table.className = "overflow-x-auto rounded-xl border border-[#023052]";
-            
+
             let tableHTML = `
               <table class="w-full text-left text-sm">
                 <thead class="bg-[#001233] text-xs uppercase text-[#5C677D]">
@@ -554,15 +502,16 @@ function renderTabContent(
                 </thead>
                 <tbody class="divide-y divide-[#023052]">
             `;
-            
+
             const severityColors: Record<string, string> = {
               critical: "text-red-400",
-              high: "text-orange-400", 
+              high: "text-orange-400",
               medium: "text-yellow-400",
               low: "text-blue-400",
             };
-            
-            for (const cve of cves.slice(0, 50)) { // Limit to 50 for performance
+
+            for (const cve of cves.slice(0, 50)) {
+              // Limit to 50 for performance
               const severityClass = severityColors[cve.severity] ?? "text-gray-400";
               tableHTML += `
                 <tr class="bg-[#00101F] hover:bg-[#001a35]">
@@ -577,18 +526,18 @@ function renderTabContent(
                 </tr>
               `;
             }
-            
+
             tableHTML += `</tbody></table>`;
-            
+
             if (cves.length > 50) {
               tableHTML += `<p class="mt-2 px-4 py-2 text-xs text-[#5C677D]">Showing 50 of ${cves.length} CVEs</p>`;
             }
-            
+
             table.innerHTML = tableHTML;
             cveListContainer.innerHTML = "";
             cveListContainer.appendChild(table);
           }
-          
+
           cveListContainer.classList.remove("hidden");
           loadButton.classList.add("hidden");
         } catch (err) {
@@ -601,7 +550,7 @@ function renderTabContent(
           loadButton.disabled = false;
         }
       });
-      
+
       detailsSection.append(loadButton, cveListContainer);
       wrapper.append(detailsSection);
     }
@@ -614,7 +563,7 @@ function renderTabContent(
 
     const card = document.createElement("div");
     card.className = "rounded-2xl border border-[#023052] bg-[#001233] p-4";
-    
+
     const info = document.createElement("p");
     info.className = "text-sm text-[#9BA3B5]";
     info.textContent =
@@ -626,7 +575,7 @@ function renderTabContent(
     if (selectedVersion.images && selectedVersion.images.length > 0) {
       const imageList = document.createElement("div");
       imageList.className = "mt-4 space-y-2";
-      
+
       const header = document.createElement("p");
       header.className = "text-xs uppercase tracking-[0.2em] text-[#5C677D]";
       header.textContent = "Images in this version";
@@ -654,8 +603,7 @@ function renderTabContent(
 
 function setTabActive(state: OverlayState, { tabButtons }: OverlayElements) {
   tabButtons.forEach((button) => {
-    button.dataset.active =
-      button.dataset.overlayTab === state.tab ? "true" : "false";
+    button.dataset.active = button.dataset.overlayTab === state.tab ? "true" : "false";
   });
 }
 
@@ -687,8 +635,7 @@ function renderOverlay(overlayState: OverlayState, elements: OverlayElements) {
   if (!manifestResult?.manifest) {
     if (overlayError) overlayError.classList.remove("hidden");
     if (overlayErrorMessage) {
-      overlayErrorMessage.textContent =
-        "This manifest did not contain provider data.";
+      overlayErrorMessage.textContent = "This manifest did not contain provider data.";
     }
     if (overlayContent) overlayContent.classList.add("hidden");
     return;
@@ -697,8 +644,7 @@ function renderOverlay(overlayState: OverlayState, elements: OverlayElements) {
   if (overlayContent) overlayContent.classList.remove("hidden");
 
   if (overlaySource) {
-    overlaySource.textContent =
-      sourceLabelMap[manifestResult.source] ?? "Unknown source";
+    overlaySource.textContent = sourceLabelMap[manifestResult.source] ?? "Unknown source";
   }
   if (overlayUpdated) {
     overlayUpdated.textContent = manifestResult.fetchedAt
@@ -721,7 +667,7 @@ function renderOverlay(overlayState: OverlayState, elements: OverlayElements) {
 
   // V2 manifests have flat versions[] array, no provider nesting
   const versions = manifestResult.manifest.versions ?? [];
-  
+
   // Pin provider select to "Vendor" only (locked for now)
   if (providerSelect) {
     providerSelect.innerHTML = "";
@@ -732,7 +678,7 @@ function renderOverlay(overlayState: OverlayState, elements: OverlayElements) {
     providerSelect.disabled = true;
     providerSelect.classList.add("opacity-60", "cursor-not-allowed");
   }
-  
+
   if (!versions.length) {
     if (versionSelect) {
       versionSelect.disabled = true;
@@ -792,15 +738,13 @@ function renderOverlay(overlayState: OverlayState, elements: OverlayElements) {
       // V2 images only have name, digest, platforms - no tag field
       const fullReference = image.name;
       button.type = "button";
-      button.dataset.active =
-        index === overlayState.imageIndex ? "true" : "false";
+      button.dataset.active = index === overlayState.imageIndex ? "true" : "false";
       button.className =
         "group block w-full rounded-2xl border border-[#023052] bg-[#001233] px-4 py-3 text-left text-sm text-[#9BA3B5] transition hover:border-[#0466C8] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0466C8]/60 data-[active=true]:border-[#0466C8] data-[active=true]:text-white overflow-hidden select-text";
       button.title = fullReference;
 
       const title = document.createElement("div");
-      title.className =
-        "truncate text-base font-semibold text-white select-text";
+      title.className = "truncate text-base font-semibold text-white select-text";
       title.textContent = fullReference;
       title.title = fullReference;
       button.append(title);
@@ -852,19 +796,11 @@ function attachOverlayHandlers(
   elements: OverlayElements,
   catalogViewModelMap: Map<string, CatalogViewModel>,
 ): void {
-  const {
-    overlay,
-    overlayBackdrop,
-    overlayClose,
-    providerSelect,
-    versionSelect,
-    tabButtons,
-  } = elements;
+  const { overlay, overlayBackdrop, overlayClose, providerSelect, versionSelect, tabButtons } =
+    elements;
   if (!overlay) return;
 
-  const cards = Array.from(
-    document.querySelectorAll<HTMLElement>("[data-catalog-card]"),
-  );
+  const cards = Array.from(document.querySelectorAll<HTMLElement>("[data-catalog-card]"));
 
   const resetOverlay = () => {
     overlayState.appId = null;
@@ -875,19 +811,15 @@ function attachOverlayHandlers(
     overlayState.tab = "overview";
     overlayState.viewModel = null;
 
-    if (elements.overlayContent)
-      elements.overlayContent.classList.add("hidden");
+    if (elements.overlayContent) elements.overlayContent.classList.add("hidden");
     if (elements.overlayError) elements.overlayError.classList.add("hidden");
-    if (elements.overlayLoading)
-      elements.overlayLoading.classList.remove("hidden");
-    if (elements.overlayStatus)
-      elements.overlayStatus.textContent = "Loading manifest…";
+    if (elements.overlayLoading) elements.overlayLoading.classList.remove("hidden");
+    if (elements.overlayStatus) elements.overlayStatus.textContent = "Loading manifest…";
     if (elements.imageList) elements.imageList.innerHTML = "";
     if (elements.tabContent) elements.tabContent.innerHTML = "";
 
     tabButtons.forEach((button) => {
-      button.dataset.active =
-        button.dataset.overlayTab === "overview" ? "true" : "false";
+      button.dataset.active = button.dataset.overlayTab === "overview" ? "true" : "false";
     });
   };
 
@@ -918,8 +850,7 @@ function attachOverlayHandlers(
 
   tabButtons.forEach((button) => {
     button.addEventListener("click", () => {
-      const targetTab =
-        (button.dataset.overlayTab as OverlayState["tab"]) ?? "overview";
+      const targetTab = (button.dataset.overlayTab as OverlayState["tab"]) ?? "overview";
       overlayState.tab = targetTab;
       setTabActive(overlayState, elements);
       renderTabContent(overlayState, elements);
@@ -942,13 +873,10 @@ function attachOverlayHandlers(
     overlay.setAttribute("aria-hidden", "false");
     lockScroll(true);
 
-    if (elements.overlayLoading)
-      elements.overlayLoading.classList.remove("hidden");
-    if (elements.overlayContent)
-      elements.overlayContent.classList.add("hidden");
+    if (elements.overlayLoading) elements.overlayLoading.classList.remove("hidden");
+    if (elements.overlayContent) elements.overlayContent.classList.add("hidden");
     if (elements.overlayError) elements.overlayError.classList.add("hidden");
-    if (elements.overlayStatus)
-      elements.overlayStatus.textContent = "Loading manifest…";
+    if (elements.overlayStatus) elements.overlayStatus.textContent = "Loading manifest…";
 
     try {
       const response = await fetch(`/api/catalog/${encodeURIComponent(appId)}`);
@@ -959,21 +887,17 @@ function attachOverlayHandlers(
       overlayState.manifestResult = payload;
       renderOverlay(overlayState, elements);
     } catch (error) {
-      if (elements.overlayLoading)
-        elements.overlayLoading.classList.add("hidden");
-      if (elements.overlayError)
-        elements.overlayError.classList.remove("hidden");
+      if (elements.overlayLoading) elements.overlayLoading.classList.add("hidden");
+      if (elements.overlayError) elements.overlayError.classList.remove("hidden");
       if (elements.overlayErrorMessage) {
-        const message =
-          error instanceof Error ? error.message : "Unknown manifest error";
+        const message = error instanceof Error ? error.message : "Unknown manifest error";
         elements.overlayErrorMessage.textContent = message;
       }
       console.warn("Unable to load catalog manifest", error);
     }
   };
 
-  const interactiveSelector =
-    'a, button, [role="button"], input, select, textarea';
+  const interactiveSelector = 'a, button, [role="button"], input, select, textarea';
 
   const handleCardActivation = (event: Event, card: HTMLElement) => {
     const target = event.target as HTMLElement | null;
@@ -986,14 +910,9 @@ function attachOverlayHandlers(
   };
 
   cards.forEach((card) => {
-    card.addEventListener("click", (event) =>
-      handleCardActivation(event, card),
-    );
+    card.addEventListener("click", (event) => handleCardActivation(event, card));
     card.addEventListener("keydown", (event) => {
-      if (
-        (event as KeyboardEvent).key === "Enter" ||
-        (event as KeyboardEvent).key === " "
-      ) {
+      if ((event as KeyboardEvent).key === "Enter" || (event as KeyboardEvent).key === " ") {
         handleCardActivation(event, card);
       }
     });

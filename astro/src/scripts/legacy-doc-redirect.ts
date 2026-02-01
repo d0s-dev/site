@@ -1,5 +1,4 @@
-const LEGACY_BASE =
-  "https://github.com/d0s-dev/docs/tree/main/releases/2024.10";
+const LEGACY_BASE = "https://github.com/d0s-dev/docs/tree/main/releases/2024.10";
 const REDIRECT_DELAY_MS = 5000;
 
 function buildLegacyTarget(pathname: string): string {
@@ -11,24 +10,16 @@ function buildLegacyTarget(pathname: string): string {
 function initLegacyRedirect() {
   if (typeof window === "undefined") return;
 
-  const container = document.querySelector<HTMLElement>(
-    "[data-legacy-doc-warning]",
-  );
+  const container = document.querySelector<HTMLElement>("[data-legacy-doc-warning]");
   if (!container) return;
 
   const pathname = window.location.pathname;
   if (!pathname.startsWith("/docs/")) return;
 
   const target = buildLegacyTarget(pathname);
-  const link = container.querySelector<HTMLAnchorElement>(
-    "[data-legacy-doc-link]",
-  );
-  const countdownEl = container.querySelector<HTMLElement>(
-    "[data-legacy-countdown]",
-  );
-  const cancelButton = container.querySelector<HTMLButtonElement>(
-    "[data-legacy-cancel]",
-  );
+  const link = container.querySelector<HTMLAnchorElement>("[data-legacy-doc-link]");
+  const countdownEl = container.querySelector<HTMLElement>("[data-legacy-countdown]");
+  const cancelButton = container.querySelector<HTMLButtonElement>("[data-legacy-cancel]");
 
   if (link) {
     link.href = target;

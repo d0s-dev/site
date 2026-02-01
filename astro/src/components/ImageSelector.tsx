@@ -45,18 +45,19 @@ export function ImageSelector({
         onSelectionChange([...selectedImages, image]);
       }
     },
-    [selectedImages, onSelectionChange]
+    [selectedImages, onSelectionChange],
   );
 
   if (images.length === 0) {
     return <span className="text-xs text-[#5C677D]">No images</span>;
   }
 
-  const buttonLabel = selectedImages.length === 0
-    ? "Select Images"
-    : selectedImages.length === images.length
-      ? `All Images (${images.length})`
-      : `${selectedImages.length} of ${images.length} Images`;
+  const buttonLabel =
+    selectedImages.length === 0
+      ? "Select Images"
+      : selectedImages.length === images.length
+        ? `All Images (${images.length})`
+        : `${selectedImages.length} of ${images.length} Images`;
 
   return (
     <div className="relative inline-block" ref={dropdownRef}>
@@ -67,7 +68,12 @@ export function ImageSelector({
         className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded border border-[#023052] bg-[#001233] text-[#9BA3B5] hover:text-white hover:border-[#0466C8] transition"
       >
         <span>{buttonLabel}</span>
-        <svg className={`w-3 h-3 transition-transform ${isOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg
+          className={`w-3 h-3 transition-transform ${isOpen ? "rotate-180" : ""}`}
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </button>
@@ -81,7 +87,9 @@ export function ImageSelector({
               <input
                 type="checkbox"
                 checked={allSelected}
-                ref={(el) => { if (el) el.indeterminate = someSelected; }}
+                ref={(el) => {
+                  if (el) el.indeterminate = someSelected;
+                }}
                 onChange={toggleAll}
                 className="w-3 h-3 rounded border-[#023052] bg-[#001233] text-[#0466C8] focus:ring-[#0466C8] focus:ring-offset-0"
               />

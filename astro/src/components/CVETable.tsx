@@ -33,7 +33,9 @@ interface CVETableProps {
 const SeverityBadge = ({ severity }: { severity: string }) => {
   const colorClass = severityColors[severity.toLowerCase()] || severityColors.unknown;
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${colorClass}`}>
+    <span
+      className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${colorClass}`}
+    >
       {severity}
     </span>
   );
@@ -51,9 +53,7 @@ export function CVETable({
   notAvailable = false,
   showImageSource = false,
 }: CVETableProps) {
-  const [sorting, setSorting] = useState<SortingState>([
-    { id: "severity", desc: false },
-  ]);
+  const [sorting, setSorting] = useState<SortingState>([{ id: "severity", desc: false }]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [pageSize, setPageSize] = useState(25);
 
@@ -125,7 +125,10 @@ export function CVETable({
         accessorKey: "imageSource",
         header: "Image",
         cell: ({ getValue }) => (
-          <span className="font-mono text-xs text-[#5C677D] truncate max-w-[150px] block" title={getValue<string>()}>
+          <span
+            className="font-mono text-xs text-[#5C677D] truncate max-w-[150px] block"
+            title={getValue<string>()}
+          >
             {getValue<string>()}
           </span>
         ),
@@ -161,17 +164,6 @@ export function CVETable({
     return (
       <div className="rounded-xl border border-[#023052] bg-[#001233] p-6 text-center">
         <p className="text-sm text-[#5C677D]">Scans aren't available yet for this version.</p>
-        {githubUrl && (
-          <a
-            href={githubUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 mt-3 text-xs text-[#7EA8FF] hover:text-white"
-          >
-            <GitHubIcon />
-            <span>View on GitHub</span>
-          </a>
-        )}
       </div>
     );
   }
@@ -187,9 +179,7 @@ export function CVETable({
   return (
     <div className="space-y-3">
       {/* Table info */}
-      <div className="text-xs text-[#5C677D]">
-        {table.getFilteredRowModel().rows.length} CVEs
-      </div>
+      <div className="text-xs text-[#5C677D]">{table.getFilteredRowModel().rows.length} CVEs</div>
 
       {/* Table */}
       <div className="overflow-x-auto rounded-xl border border-[#023052]">

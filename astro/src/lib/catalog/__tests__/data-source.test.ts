@@ -32,16 +32,11 @@ const sampleManifest: CatalogManifest = {
   upstream: {
     helm: { repo: "https://charts.bitnami.com/bitnami", chart: "redis" },
   },
-  versions: [
-    { version: "7.0.0", chartVersion: "17.0.0" },
-  ],
+  versions: [{ version: "7.0.0", chartVersion: "17.0.0" }],
   lastUpdated: "2025-10-29T00:00:00Z",
 };
 
-const createResponse = <T>(
-  data: T,
-  init: { etag?: string; status?: number } = {},
-) => ({
+const createResponse = <T>(data: T, init: { etag?: string; status?: number } = {}) => ({
   ok: (init.status ?? 200) < 400,
   status: init.status ?? 200,
   statusText: "OK",
@@ -93,7 +88,7 @@ describe("catalog data-source", () => {
     global.fetch = vi.fn().mockRejectedValue(new Error("network error"));
 
     await expect(fetchCatalogData({ forceRefresh: true })).rejects.toThrow(
-      "Failed to fetch catalog data"
+      "Failed to fetch catalog data",
     );
     warn.mockRestore();
   });
@@ -119,9 +114,9 @@ describe("catalog data-source", () => {
     resetCatalogCache();
     global.fetch = vi.fn().mockRejectedValue(new Error("boom"));
 
-    await expect(
-      fetchCatalogManifest("redis", { forceRefresh: true })
-    ).rejects.toThrow("Failed to fetch manifest for redis");
+    await expect(fetchCatalogManifest("redis", { forceRefresh: true })).rejects.toThrow(
+      "Failed to fetch manifest for redis",
+    );
   });
 
   it("reuses cached manifest data when fetch returns 304", async () => {
@@ -166,13 +161,10 @@ describe("catalog data-source", () => {
 
   it("respects full ref overrides for manifest fetches", async () => {
     process.env.CATALOG_SOURCE_BRANCH = "refs/tags/v1.2.3";
-    const { fetchCatalogData, fetchCatalogManifest, resetCatalogCache } =
-      await loadDataSource();
+    const { fetchCatalogData, fetchCatalogManifest, resetCatalogCache } = await loadDataSource();
     resetCatalogCache();
 
-    global.fetch = vi
-      .fn()
-      .mockResolvedValue(createResponse(sampleCatalogResponse));
+    global.fetch = vi.fn().mockResolvedValue(createResponse(sampleCatalogResponse));
 
     await fetchCatalogData({ forceRefresh: true });
     expect(global.fetch).toHaveBeenCalledWith(

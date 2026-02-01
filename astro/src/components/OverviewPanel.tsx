@@ -23,7 +23,13 @@ const CheckIcon = () => (
 );
 
 const ExternalLinkIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-3.5 h-3.5">
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={2}
+    className="w-3.5 h-3.5"
+  >
     <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
     <polyline points="15 3 21 3 21 9" />
     <line x1="10" y1="14" x2="21" y2="3" />
@@ -39,12 +45,7 @@ export interface OverviewPanelProps {
 
 const DEFAULT_ARCHES = ["amd64", "arm64"];
 
-export function OverviewPanel({
-  appId,
-  version,
-  manifest,
-  selectedVersion,
-}: OverviewPanelProps) {
+export function OverviewPanel({ appId, version, manifest, selectedVersion }: OverviewPanelProps) {
   const [selectedArch, setSelectedArch] = useState("amd64");
   const [copied, setCopied] = useState(false);
 
@@ -145,7 +146,9 @@ export function OverviewPanel({
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <div className="rounded-xl border border-[#023052] bg-[#001233] p-3 text-center">
           <div className="text-xs uppercase tracking-wider text-[#5C677D] mb-1">App Version</div>
-          <div className="text-sm font-medium text-white">{selectedVersion.appVersion || version}</div>
+          <div className="text-sm font-medium text-white">
+            {selectedVersion.appVersion || version}
+          </div>
         </div>
         <div className="rounded-xl border border-[#023052] bg-[#001233] p-3 text-center">
           <div className="text-xs uppercase tracking-wider text-[#5C677D] mb-1">Chart Version</div>
@@ -171,19 +174,27 @@ export function OverviewPanel({
           <h3 className="text-sm font-medium text-white mb-3">Vulnerability Summary</h3>
           <div className="grid grid-cols-4 gap-3">
             <div className="rounded-lg bg-[#00101F] p-2 text-center">
-              <div className="text-lg font-bold text-red-500">{selectedVersion.aggregates.critical}</div>
+              <div className="text-lg font-bold text-red-500">
+                {selectedVersion.aggregates.critical}
+              </div>
               <div className="text-xs text-[#5C677D]">Critical</div>
             </div>
             <div className="rounded-lg bg-[#00101F] p-2 text-center">
-              <div className="text-lg font-bold text-orange-500">{selectedVersion.aggregates.high}</div>
+              <div className="text-lg font-bold text-orange-500">
+                {selectedVersion.aggregates.high}
+              </div>
               <div className="text-xs text-[#5C677D]">High</div>
             </div>
             <div className="rounded-lg bg-[#00101F] p-2 text-center">
-              <div className="text-lg font-bold text-yellow-500">{selectedVersion.aggregates.medium}</div>
+              <div className="text-lg font-bold text-yellow-500">
+                {selectedVersion.aggregates.medium}
+              </div>
               <div className="text-xs text-[#5C677D]">Medium</div>
             </div>
             <div className="rounded-lg bg-[#00101F] p-2 text-center">
-              <div className="text-lg font-bold text-blue-400">{selectedVersion.aggregates.low}</div>
+              <div className="text-lg font-bold text-blue-400">
+                {selectedVersion.aggregates.low}
+              </div>
               <div className="text-xs text-[#5C677D]">Low</div>
             </div>
           </div>
@@ -247,7 +258,9 @@ export function OverviewPanel({
       )}
 
       {/* Links */}
-      {(manifest.upstream?.git || manifest.upstream?.website || manifest.upstream?.helm?.documentation) && (
+      {(manifest.upstream?.git ||
+        manifest.upstream?.website ||
+        manifest.upstream?.helm?.documentation) && (
         <div className="rounded-xl border border-[#023052] bg-[#001233] p-4">
           <h3 className="text-sm font-medium text-white mb-3">Links</h3>
           <div className="flex flex-wrap gap-2">
