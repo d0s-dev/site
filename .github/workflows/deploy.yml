@@ -5,6 +5,9 @@ on:
     branches:
       - main
   workflow_dispatch:
+  # Triggered by apps repo when catalog is updated
+  repository_dispatch:
+    types: [catalog-updated]
 
 permissions:
   contents: read
@@ -19,6 +22,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Log trigger info
+        if: github.event_name == 'repository_dispatch'
+        run: |
+          echo "🔔 Triggered by: ${{ github.event.client_payload.triggered_by }}"
+          echo "📋 Run ID: ${{ github.event.client_payload.run_id }}"
+      
       - name: Checkout
         uses: actions/checkout@v4
 

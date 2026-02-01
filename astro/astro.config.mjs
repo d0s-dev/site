@@ -1,5 +1,6 @@
 // @ts-check
 
+import react from "@astrojs/react";
 import starlight from "@astrojs/starlight";
 import tailwind from "@astrojs/tailwind";
 import { defineConfig } from "astro/config";
@@ -10,6 +11,7 @@ export default defineConfig({
   base: "/",
   output: "static",
   integrations: [
+    react(),
     starlight({
       title: "d0s Documentation",
       description:

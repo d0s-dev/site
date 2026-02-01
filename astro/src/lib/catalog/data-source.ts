@@ -1,4 +1,3 @@
-import { mockCatalogResponse, mockManifests } from "./mock-data";
 import type {
   CatalogDataResult,
   CatalogManifest,
@@ -6,16 +5,72 @@ import type {
   CatalogResponse,
   CatalogSource,
 } from "./types";
+import { sanitizeFilename } from "./utils";
 
+// Local dev server URL (from `d0s catalog serve`)
+// Use import.meta.env for browser compatibility (process.env doesn't exist in browsers)
+// For client-side fetches (Scans/SBOMs), default to localhost:8080 when running in browser
+const CATALOG_SERVE_URL = import.meta.env?.CATALOG_SERVE_URL ?? 
+  (typeof window !== 'undefined' ? 'http://localhost:8080' : undefined);
+
+// GitHub raw content fallback
 const APPS_BASE_URL = "https://raw.githubusercontent.com/d0s-dev/apps";
-const DEFAULT_BRANCH = process.env.CATALOG_SOURCE_BRANCH ?? "main";
+const GITHUB_BROWSE_URL = "https://github.com/d0s-dev/apps/tree";
+const DEFAULT_BRANCH = import.meta.env?.CATALOG_SOURCE_BRANCH ?? "main";
 const DEFAULT_REF = DEFAULT_BRANCH.startsWith("refs/")
   ? DEFAULT_BRANCH
   : `refs/heads/${DEFAULT_BRANCH}`;
 const APPS_INDEX_PATH = "catalog/apps.json";
 
-const manifestPath = (appId: string, ref = DEFAULT_REF) =>
-  `${APPS_BASE_URL}/${ref}/catalog/${encodeURIComponent(appId)}/manifest.json`;
+// Build URLs based on whether we're using local dev server
+const getCatalogUrl = () =>
+  CATALOG_SERVE_URL
+    ? `${CATALOG_SERVE_URL}/apps.json`
+    : `${APPS_BASE_URL}/${DEFAULT_REF}/${APPS_INDEX_PATH}`;
+
+const getManifestUrl = (appId: string) =>
+  CATALOG_SERVE_URL
+    ? `${CATALOG_SERVE_URL}/${encodeURIComponent(appId)}/manifest.json`
+    : `${APPS_BASE_URL}/${DEFAULT_REF}/catalog/${encodeURIComponent(appId)}/manifest.json`;
+
+/**
+ * Get URL for a CVE scan JSON file
+ */
+export const getScanUrl = (appId: string, version: string, imageName: string) => {
+  const sanitized = sanitizeFilename(imageName);
+  return CATALOG_SERVE_URL
+    ? `${CATALOG_SERVE_URL}/${appId}/versions/${version}/scans/${sanitized}-cves.json`
+    : `${APPS_BASE_URL}/${DEFAULT_REF}/catalog/${appId}/versions/${version}/scans/${sanitized}-cves.json`;
+};
+
+/**
+ * Get URL for an SBOM JSON file
+ */
+export const getSBOMUrl = (appId: string, version: string, imageName: string) => {
+  const sanitized = sanitizeFilename(imageName);
+  return CATALOG_SERVE_URL
+    ? `${CATALOG_SERVE_URL}/${appId}/versions/${version}/sboms/${appId}/${sanitized}.json`
+    : `${APPS_BASE_URL}/${DEFAULT_REF}/catalog/${appId}/versions/${version}/sboms/${appId}/${sanitized}.json`;
+};
+
+/**
+ * Get URL for the SBOM HTML viewer
+ */
+export const getSBOMViewerUrl = (appId: string, version: string, imageName: string) => {
+  const sanitized = sanitizeFilename(imageName);
+  return CATALOG_SERVE_URL
+    ? `${CATALOG_SERVE_URL}/${appId}/versions/${version}/sboms/${appId}/sbom-viewer-${sanitized}.html`
+    : `${APPS_BASE_URL}/${DEFAULT_REF}/catalog/${appId}/versions/${version}/sboms/${appId}/sbom-viewer-${sanitized}.html`;
+};
+
+/**
+ * Get GitHub browse URL for version artifacts folder
+ */
+export const getGitHubBrowseUrl = (appId: string, version: string, subpath?: string) => {
+  const base = `${GITHUB_BROWSE_URL}/${DEFAULT_BRANCH}/catalog/${appId}/versions/${version}`;
+  return subpath ? `${base}/${subpath}` : base;
+};
+
 
 const cache: {
   catalog?: CatalogDataResult & { etag?: string };
@@ -79,13 +134,14 @@ export async function fetchCatalogData(
   }
 
   try {
-    const url = `${APPS_BASE_URL}/${DEFAULT_REF}/${APPS_INDEX_PATH}`;
+    const url = getCatalogUrl();
+    const isLocal = !!CATALOG_SERVE_URL;
     const result = await fetchJson<CatalogResponse>(url, {
-      headers: cached?.etag ? { "If-None-Match": cached.etag } : undefined,
+      headers: cached?.etag && !isLocal ? { "If-None-Match": cached.etag } : undefined,
       cache: "no-store",
     });
     const data: CatalogDataResult = {
-      source: "remote",
+      source: isLocal ? "local" : "remote",
       response: result.data,
       fetchedAt: now,
     };
@@ -99,14 +155,18 @@ export async function fetchCatalogData(
         fetchedAt: cached.fetchedAt,
       };
     }
-    console.warn("Falling back to mock catalog data:", error);
-    const fallback: CatalogDataResult = {
-      source: "mock",
-      response: mockCatalogResponse,
-      fetchedAt: now,
-    };
-    cache.catalog = fallback;
-    return fallback;
+    // Return cached data if available, otherwise throw
+    if (cached) {
+      console.warn("Failed to fetch catalog, using cached data:", error);
+      return {
+        source: "cache",
+        response: cached.response,
+        fetchedAt: cached.fetchedAt,
+      };
+    }
+    throw new Error(
+      `Failed to fetch catalog data: ${(error as Error).message}`
+    );
   }
 }
 
@@ -127,9 +187,10 @@ export async function fetchCatalogManifest(
   }
 
   try {
-    const url = manifestPath(appId);
+    const url = getManifestUrl(appId);
+    const isLocal = !!CATALOG_SERVE_URL;
     const result = await fetchJson<CatalogManifest>(url, {
-      headers: cacheEntry?.etag
+      headers: cacheEntry?.etag && !isLocal
         ? { "If-None-Match": cacheEntry.etag }
         : undefined,
       cache: "no-store",
@@ -138,7 +199,7 @@ export async function fetchCatalogManifest(
     const entry = {
       manifest: result.data,
       fetchedAt: now,
-      source: "remote" as CatalogSource,
+      source: (isLocal ? "local" : "remote") as CatalogSource,
       etag: result.etag,
     };
     cache.manifests.set(appId, entry);
@@ -155,18 +216,17 @@ export async function fetchCatalogManifest(
         source: "cache",
       };
     }
-    const fallback = mockManifests[appId];
-    if (fallback) {
-      const entry = {
-        manifest: fallback,
-        fetchedAt: now,
-        source: "mock" as CatalogSource,
+    // Return cached data if available, otherwise throw
+    if (cacheEntry) {
+      console.warn(`Failed to fetch manifest for ${appId}, using cached data:`, error);
+      return {
+        manifest: cacheEntry.manifest,
+        fetchedAt: cacheEntry.fetchedAt,
+        source: "cache",
       };
-      cache.manifests.set(appId, entry);
-      return entry;
     }
     throw new Error(
-      `Manifest for ${appId} not found. Original error: ${(error as Error).message}`,
+      `Failed to fetch manifest for ${appId}: ${(error as Error).message}`
     );
   }
 }

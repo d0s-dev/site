@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "astro dev",
     "prebuild": "node ./scripts/sync-docs.mjs && npm run bundle:catalog",
-    "bundle:catalog": "esbuild ./src/scripts/catalog-page.ts --bundle --format=esm --outfile=./public/catalog-page.js",
-    "bundle:catalog:watch": "npm run bundle:catalog -- --watch",
+    "bundle:catalog": "esbuild ./src/scripts/catalog-page.tsx --bundle --format=esm --jsx=automatic --loader:.tsx=tsx --minify --outfile=./public/catalog-page.js --define:process.env.NODE_ENV=\\\"production\\\"",
+    "bundle:catalog:watch": "esbuild ./src/scripts/catalog-page.tsx --bundle --format=esm --jsx=automatic --loader:.tsx=tsx --outfile=./public/catalog-page.js --watch --define:process.env.NODE_ENV=\\\"development\\\"",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
@@ -17,10 +17,16 @@
     "sync:docs": "node ./scripts/sync-docs.mjs"
   },
   "dependencies": {
+    "@astrojs/react": "^4.4.2",
     "@astrojs/starlight": "^0.36.1",
     "@astrojs/tailwind": "^6.0.2",
+    "@tanstack/react-table": "^8.21.3",
+    "@types/react": "^19.2.10",
+    "@types/react-dom": "^19.2.3",
     "astro": "^5.15.2",
-    "chart.js": "^4.5.1"
+    "chart.js": "^4.5.1",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.5",

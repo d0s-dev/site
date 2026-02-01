@@ -1,5 +1,15 @@
 import type { ChartData } from "chart.js";
 import Chart from "chart.js/auto";
+import React from "react";
+import { createRoot, type Root } from "react-dom/client";
+import { OverviewPanel } from "../components/OverviewPanel";
+import { ScansPanel } from "../components/ScansPanel";
+import { SBOMsPanel } from "../components/SBOMsPanel";
+
+// Track React roots for cleanup
+let overviewRoot: Root | null = null;
+let scansRoot: Root | null = null;
+let sbomsRoot: Root | null = null;
 
 type CatalogViewModel = {
   id: string;
@@ -91,7 +101,6 @@ type OverlayElements = {
   overlayContent: HTMLElement | null;
   providerSelect: HTMLSelectElement | null;
   versionSelect: HTMLSelectElement | null;
-  imageList: HTMLElement | null;
   tabButtons: HTMLButtonElement[];
   tabContent: HTMLElement | null;
 };
@@ -140,8 +149,6 @@ function buildOverlayElements(): OverlayElements {
     versionSelect:
       overlay?.querySelector<HTMLSelectElement>("[data-overlay-version]") ??
       null,
-    imageList:
-      overlay?.querySelector<HTMLElement>("[data-overlay-image-list]") ?? null,
     tabButtons: overlay
       ? Array.from(
           overlay.querySelectorAll<HTMLButtonElement>("[data-overlay-tab]"),
@@ -412,243 +419,74 @@ function renderTabContent(
   }
 
   if (overlayState.tab === "overview") {
-    const container = document.createElement("div");
-    container.className = "space-y-4";
+    // Mount React OverviewPanel component
+    const wrapper = document.createElement("div");
+    wrapper.id = "overview-panel-root";
+    tabContent.append(wrapper);
 
-    const header = document.createElement("div");
-    header.className = "rounded-2xl border border-[#023052] bg-[#001233] p-4";
-    const title = document.createElement("h4");
-    title.className = "text-lg font-semibold text-white";
-    // V2: image only has name field, no tag
-    title.textContent = image.name;
-    header.append(title);
-
-    if (image.digest) {
-      const digest = document.createElement("p");
-      digest.className = "mt-2 break-all text-xs text-[#5C677D]";
-      digest.textContent = image.digest;
-      header.append(digest);
+    // Clean up previous root if exists
+    if (overviewRoot) {
+      overviewRoot.unmount();
+      overviewRoot = null;
     }
 
-    // Show platforms if available
-    if (image.platforms?.length) {
-      const platforms = document.createElement("p");
-      platforms.className = "mt-2 text-xs text-[#5C677D]";
-      platforms.textContent = `Platforms: ${image.platforms.join(", ")}`;
-      header.append(platforms);
+    const appId = overlayState.appId;
+
+    if (appId && manifest) {
+      overviewRoot = createRoot(wrapper);
+      overviewRoot.render(
+        <OverviewPanel
+          appId={appId}
+          version={selectedVersion.version}
+          manifest={manifest}
+          selectedVersion={selectedVersion}
+        />
+      );
     }
-
-    container.append(header);
-
-    // V2: Show OCI package links if available
-    if (selectedVersion.ociPackage) {
-      const linksWrapper = document.createElement("div");
-      linksWrapper.className =
-        "space-y-2 rounded-2xl border border-[#023052] bg-[#001233] p-4";
-      const linksTitle = document.createElement("p");
-      linksTitle.className =
-        "text-xs uppercase tracking-[0.2em] text-[#5C677D]";
-      linksTitle.textContent = "OCI Packages";
-      linksWrapper.append(linksTitle);
-
-      const linkRow = document.createElement("div");
-      linkRow.className = "flex flex-wrap gap-3";
-      Object.entries(selectedVersion.ociPackage).forEach(([arch, url]) => {
-        if (!url) return;
-        const link = document.createElement("a");
-        link.className =
-          "inline-flex items-center gap-2 rounded-full border border-[#023052] px-3 py-1 text-xs text-[#7EA8FF] transition hover:border-[#0466C8] hover:text-white";
-        link.href = url;
-        link.target = "_blank";
-        link.rel = "noreferrer noopener";
-        link.textContent = arch;
-        linkRow.append(link);
-      });
-      if (linkRow.children.length) {
-        linksWrapper.append(linkRow);
-        container.append(linksWrapper);
-      }
-    }
-
-    tabContent.append(container);
   } else if (overlayState.tab === "scans") {
+    // Mount React ScansPanel component
     const wrapper = document.createElement("div");
-    wrapper.className = "space-y-4";
+    wrapper.id = "scans-panel-root";
+    tabContent.append(wrapper);
 
-    const severitySummary = document.createElement("div");
-    severitySummary.className = "grid gap-3 sm:grid-cols-2 lg:grid-cols-4";
-
-    severityKeys.forEach((key) => {
-      const card = document.createElement("div");
-      card.className =
-        "rounded-2xl border border-[#023052] bg-[#001233] p-4 text-center";
-      const label = document.createElement("p");
-      label.className = "text-xs uppercase tracking-[0.2em] text-[#5C677D]";
-      label.textContent = key;
-      const value = document.createElement("p");
-      value.className = "mt-2 text-2xl font-semibold text-white";
-      // V2: CVE data is at version level via aggregates, not per-image
-      const aggregates = selectedVersion.aggregates;
-      value.textContent = String(aggregates?.[key as keyof typeof aggregates] ?? 0);
-      card.append(label, value);
-      severitySummary.append(card);
-    });
-
-    wrapper.append(severitySummary);
-
-    // V2: aggregates is at version level
-    if (!selectedVersion.aggregates) {
-      const hint = document.createElement("p");
-      hint.className = "text-xs text-[#5C677D]";
-      hint.textContent =
-        "Detailed CVE listings are not available for this version yet.";
-      wrapper.append(hint);
-    } else {
-      // Add CVE details section with lazy loading
-      const detailsSection = document.createElement("div");
-      detailsSection.className = "mt-4";
-      
-      const loadButton = document.createElement("button");
-      loadButton.className =
-        "inline-flex items-center gap-2 rounded-full border border-[#023052] bg-[#001233] px-4 py-2 text-sm text-[#7EA8FF] transition hover:border-[#0466C8] hover:text-white";
-      loadButton.textContent = "Load CVE Details";
-      loadButton.dataset.cveLoader = "true";
-      
-      const cveListContainer = document.createElement("div");
-      cveListContainer.className = "mt-4 hidden";
-      cveListContainer.dataset.cveList = "true";
-      
-      loadButton.addEventListener("click", async () => {
-        loadButton.textContent = "Loading...";
-        loadButton.disabled = true;
-        
-        try {
-          const { getCVEsForVersion, getNVDLink } = await import("../lib/catalog/cve-source");
-          const appId = overlayState.appId;
-          const version = selectedVersion.version;
-          
-          if (!appId) {
-            throw new Error("Missing app context");
-          }
-          
-          const cves = await getCVEsForVersion(appId, version);
-          
-          if (cves.length === 0) {
-            cveListContainer.innerHTML = `
-              <p class="text-sm text-[#5C677D]">No detailed CVE data available in the central database.</p>
-            `;
-          } else {
-            const table = document.createElement("div");
-            table.className = "overflow-x-auto rounded-xl border border-[#023052]";
-            
-            let tableHTML = `
-              <table class="w-full text-left text-sm">
-                <thead class="bg-[#001233] text-xs uppercase text-[#5C677D]">
-                  <tr>
-                    <th class="px-4 py-3">CVE ID</th>
-                    <th class="px-4 py-3">Severity</th>
-                    <th class="px-4 py-3">CVSS</th>
-                    <th class="px-4 py-3">Package</th>
-                    <th class="px-4 py-3">Links</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-[#023052]">
-            `;
-            
-            const severityColors: Record<string, string> = {
-              critical: "text-red-400",
-              high: "text-orange-400", 
-              medium: "text-yellow-400",
-              low: "text-blue-400",
-            };
-            
-            for (const cve of cves.slice(0, 50)) { // Limit to 50 for performance
-              const severityClass = severityColors[cve.severity] ?? "text-gray-400";
-              tableHTML += `
-                <tr class="bg-[#00101F] hover:bg-[#001a35]">
-                  <td class="px-4 py-3 font-mono text-white">${cve.id}</td>
-                  <td class="px-4 py-3 ${severityClass} capitalize">${cve.severity}</td>
-                  <td class="px-4 py-3 text-white">${cve.cvssScore?.toFixed(1) ?? "N/A"}</td>
-                  <td class="px-4 py-3 text-[#9BA3B5]">${cve.package ?? "—"}</td>
-                  <td class="px-4 py-3">
-                    <a href="${getNVDLink(cve.id)}" target="_blank" rel="noopener" 
-                       class="text-[#7EA8FF] hover:text-white">NVD</a>
-                  </td>
-                </tr>
-              `;
-            }
-            
-            tableHTML += `</tbody></table>`;
-            
-            if (cves.length > 50) {
-              tableHTML += `<p class="mt-2 px-4 py-2 text-xs text-[#5C677D]">Showing 50 of ${cves.length} CVEs</p>`;
-            }
-            
-            table.innerHTML = tableHTML;
-            cveListContainer.innerHTML = "";
-            cveListContainer.appendChild(table);
-          }
-          
-          cveListContainer.classList.remove("hidden");
-          loadButton.classList.add("hidden");
-        } catch (err) {
-          console.error("Failed to load CVE details:", err);
-          cveListContainer.innerHTML = `
-            <p class="text-sm text-red-400">Failed to load CVE details. Please try again.</p>
-          `;
-          cveListContainer.classList.remove("hidden");
-          loadButton.textContent = "Retry";
-          loadButton.disabled = false;
-        }
-      });
-      
-      detailsSection.append(loadButton, cveListContainer);
-      wrapper.append(detailsSection);
+    // Clean up previous root if exists
+    if (scansRoot) {
+      scansRoot.unmount();
+      scansRoot = null;
     }
 
-    tabContent.append(wrapper);
+    const appId = overlayState.appId;
+    const version = selectedVersion.version;
+    const images = (selectedVersion.images || []).map((img) => img.name);
+
+    if (appId && version) {
+      scansRoot = createRoot(wrapper);
+      scansRoot.render(
+        <ScansPanel appId={appId} version={version} images={images} />
+      );
+    }
   } else if (overlayState.tab === "sboms") {
-    // V2: SBOMs are generated during package builds and included in OCI artifacts
+    // Mount React SBOMsPanel component
     const wrapper = document.createElement("div");
-    wrapper.className = "space-y-4";
+    wrapper.id = "sboms-panel-root";
+    tabContent.append(wrapper);
 
-    const card = document.createElement("div");
-    card.className = "rounded-2xl border border-[#023052] bg-[#001233] p-4";
-    
-    const info = document.createElement("p");
-    info.className = "text-sm text-[#9BA3B5]";
-    info.textContent =
-      "SBOMs are generated during package builds and embedded in the OCI artifacts. " +
-      "Use the package download links on the Overview tab to access the full package including SBOM.";
-    card.append(info);
-
-    // Show image list for reference
-    if (selectedVersion.images && selectedVersion.images.length > 0) {
-      const imageList = document.createElement("div");
-      imageList.className = "mt-4 space-y-2";
-      
-      const header = document.createElement("p");
-      header.className = "text-xs uppercase tracking-[0.2em] text-[#5C677D]";
-      header.textContent = "Images in this version";
-      imageList.append(header);
-
-      selectedVersion.images.forEach((img) => {
-        const item = document.createElement("div");
-        item.className = "flex items-center gap-2 text-sm text-white";
-        const icon = document.createElement("span");
-        icon.textContent = "📦";
-        const name = document.createElement("span");
-        name.className = "font-mono text-[#9BA3B5]";
-        name.textContent = img.name;
-        item.append(icon, name);
-        imageList.append(item);
-      });
-
-      card.append(imageList);
+    // Clean up previous root if exists
+    if (sbomsRoot) {
+      sbomsRoot.unmount();
+      sbomsRoot = null;
     }
 
-    wrapper.append(card);
-    tabContent.append(wrapper);
+    const appId = overlayState.appId;
+    const version = selectedVersion.version;
+    const images = (selectedVersion.images || []).map((img) => img.name);
+
+    if (appId && version) {
+      sbomsRoot = createRoot(wrapper);
+      sbomsRoot.render(
+        <SBOMsPanel appId={appId} version={version} images={images} />
+      );
+    }
   }
 }
 
@@ -675,7 +513,6 @@ function renderOverlay(overlayState: OverlayState, elements: OverlayElements) {
     overlayUpdated,
     providerSelect,
     versionSelect,
-    imageList,
   } = elements;
 
   const manifestResult = overlayState.manifestResult;
@@ -717,7 +554,6 @@ function renderOverlay(overlayState: OverlayState, elements: OverlayElements) {
 
   if (providerSelect) providerSelect.innerHTML = "";
   if (versionSelect) versionSelect.innerHTML = "";
-  if (imageList) imageList.innerHTML = "";
 
   // V2 manifests have flat versions[] array, no provider nesting
   const versions = manifestResult.manifest.versions ?? [];
@@ -770,10 +606,6 @@ function renderOverlay(overlayState: OverlayState, elements: OverlayElements) {
   const images = selectedVersion?.images ?? [];
 
   if (!images.length) {
-    if (imageList) {
-      imageList.innerHTML =
-        '<p class="rounded-2xl border border-[#023052] bg-[#001233] p-4 text-sm text-[#5C677D]">No images shipped with this version.</p>';
-    }
     if (elements.tabContent) {
       elements.tabContent.innerHTML =
         '<p class="text-sm text-[#5C677D]">Choose another version to inspect image assets.</p>';
@@ -783,43 +615,6 @@ function renderOverlay(overlayState: OverlayState, elements: OverlayElements) {
 
   if (overlayState.imageIndex >= images.length) {
     overlayState.imageIndex = 0;
-  }
-
-  if (imageList) {
-    type ImageType = { name: string; digest?: string; platforms?: string[] };
-    images.forEach((image: ImageType, index: number) => {
-      const button = document.createElement("button");
-      // V2 images only have name, digest, platforms - no tag field
-      const fullReference = image.name;
-      button.type = "button";
-      button.dataset.active =
-        index === overlayState.imageIndex ? "true" : "false";
-      button.className =
-        "group block w-full rounded-2xl border border-[#023052] bg-[#001233] px-4 py-3 text-left text-sm text-[#9BA3B5] transition hover:border-[#0466C8] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0466C8]/60 data-[active=true]:border-[#0466C8] data-[active=true]:text-white overflow-hidden select-text";
-      button.title = fullReference;
-
-      const title = document.createElement("div");
-      title.className =
-        "truncate text-base font-semibold text-white select-text";
-      title.textContent = fullReference;
-      title.title = fullReference;
-      button.append(title);
-
-      // Show platforms if available
-      if (image.platforms?.length) {
-        const platformLine = document.createElement("p");
-        platformLine.className = "mt-1 text-xs text-[#5C677D]";
-        platformLine.textContent = `Platforms: ${image.platforms.join(", ")}`;
-        button.append(platformLine);
-      }
-
-      button.addEventListener("click", () => {
-        overlayState.imageIndex = index;
-        renderOverlay(overlayState, elements);
-      });
-
-      imageList.append(button);
-    });
   }
 
   setTabActive(overlayState, elements);
@@ -882,7 +677,6 @@ function attachOverlayHandlers(
       elements.overlayLoading.classList.remove("hidden");
     if (elements.overlayStatus)
       elements.overlayStatus.textContent = "Loading manifest…";
-    if (elements.imageList) elements.imageList.innerHTML = "";
     if (elements.tabContent) elements.tabContent.innerHTML = "";
 
     tabButtons.forEach((button) => {
@@ -897,6 +691,20 @@ function attachOverlayHandlers(
     overlay.setAttribute("aria-hidden", "true");
     lockScroll(false);
     resetOverlay();
+    
+    // Clean up React roots
+    if (overviewRoot) {
+      overviewRoot.unmount();
+      overviewRoot = null;
+    }
+    if (scansRoot) {
+      scansRoot.unmount();
+      scansRoot = null;
+    }
+    if (sbomsRoot) {
+      sbomsRoot.unmount();
+      sbomsRoot = null;
+    }
   };
 
   if (providerSelect) {
@@ -1023,11 +831,17 @@ function attachOverlayHandlers(
 function initCatalogPage() {
   if (typeof document === "undefined") return;
 
+  console.log("[catalog-page] initCatalogPage starting...");
+
   initFilters();
   initChart();
 
   const catalogViewModelMap = buildCatalogViewModelMap();
+  console.log("[catalog-page] catalogViewModelMap size:", catalogViewModelMap.size);
+
   const overlayElements = buildOverlayElements();
+  console.log("[catalog-page] overlay element found:", !!overlayElements.overlay);
+
   const overlayState: OverlayState = {
     appId: null,
     manifestResult: null,
@@ -1039,7 +853,12 @@ function initCatalogPage() {
   };
 
   if (overlayElements.overlay) {
+    const cards = document.querySelectorAll("[data-catalog-card]");
+    console.log("[catalog-page] Found", cards.length, "catalog cards");
     attachOverlayHandlers(overlayState, overlayElements, catalogViewModelMap);
+    console.log("[catalog-page] Overlay handlers attached");
+  } else {
+    console.warn("[catalog-page] Overlay element not found!");
   }
 }
 

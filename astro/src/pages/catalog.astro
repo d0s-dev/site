@@ -1,8 +1,23 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { fetchCatalogData } from "../lib/catalog/data-source";
-import { mockCatalogResponse, sumSeverity } from "../lib/catalog/mock-data";
-import type { CatalogApp, SeveritySummary } from "../lib/catalog/types";
+import type { CatalogApp, CVESummary } from "../lib/catalog/types";
+
+// Sum CVE severities across all apps
+const sumSeverity = (apps: CatalogApp[]): CVESummary => {
+  return apps.reduce(
+    (acc, app) => {
+      if (app.cves) {
+        acc.critical += app.cves.critical ?? 0;
+        acc.high += app.cves.high ?? 0;
+        acc.medium += app.cves.medium ?? 0;
+        acc.low += app.cves.low ?? 0;
+      }
+      return acc;
+    },
+    { critical: 0, high: 0, medium: 0, low: 0 }
+  );
+};
 
 const formatDate = (input: string) =>
   new Date(input).toLocaleDateString("en-US", {
@@ -20,17 +35,17 @@ const severityLabelMap: Record<(typeof severityOrder)[number], string> = {
 };
 const severityColorMap: Record<(typeof severityOrder)[number], string> = {
   critical: "#FF6B6B",
-  high: "#F59F00",
-  medium: "#FAB005",
+  high: "#FF9500",
+  medium: "#FFD60A",
   low: "#4DABF7",
 };
 
 const catalogResult = await fetchCatalogData();
-const catalogResponse = catalogResult.response ?? mockCatalogResponse;
+const catalogResponse = catalogResult.response;
 const catalogApps = (catalogResponse.apps ?? []) as CatalogApp[];
 const totalPackages = catalogApps.length;
 const totalVersions = catalogApps.reduce((acc, app) => acc + (app.versionCount ?? 1), 0);
-const totalBuilds = catalogApps.reduce((acc, app) => acc + (app.buildCount ?? app.imageCount ?? 0), 0);
+const totalBuilds = catalogApps.reduce((acc, app) => acc + (app.imageCount ?? 0), 0);
 
 const formatNumber = (value: number) =>
   new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(value);
@@ -45,11 +60,16 @@ const labelOptions = [
   ...Array.from(new Set(catalogApps.flatMap((app) => app.labels ?? []))).sort((a, b) => a.localeCompare(b)),
 ];
 
+// Dynamic provider options based on what's actually in the catalog
+const allProviders = new Set<string>();
+catalogApps.forEach((app) => (app.providers ?? []).forEach((p) => allProviders.add(p)));
+
 const providerOptions: Array<{ value: string; label: string }> = [
   { value: "all", label: "All providers" },
-  { value: "ironbank", label: "Iron Bank available" },
-  { value: "chainguard", label: "Chainguard available" },
-  { value: "vendor", label: "Vendor only" },
+  ...Array.from(allProviders).sort().map((p) => ({
+    value: p,
+    label: p === "ironbank" ? "Iron Bank" : p === "chainguard" ? "Chainguard" : p.charAt(0).toUpperCase() + p.slice(1),
+  })),
 ];
 
 const mapAppToSearchText = (app: CatalogApp) =>
@@ -64,15 +84,10 @@ const viewModels = catalogApps.map((app) => ({
   summary: app.summary,
   labels: app.labels ?? [],
   providers: app.providers ?? [],
-  hasIronBank: app.hasIronBank,
-  hasChainguard: app.hasChainguard,
-  vendorOnly: app.providers?.length === 1 && app.providers[0] === "vendor",
   imageCount: app.imageCount,
   cves: app.cves,
   latestVersion: app.latestVersion,
-  zarfPackage: app.zarfPackage,
   links: app.links ?? {},
-  logoUrl: (app as any).logoUrl ?? null,
   searchText: mapAppToSearchText(app),
 }));
 
@@ -80,6 +95,7 @@ const sourceLabelMap = {
   remote: "Live GitHub data",
   cache: "Cached GitHub data",
   mock: "Mock dataset",
+  local: "Local dev server",
 } as const;
 
 const catalogSourceLabel = sourceLabelMap[catalogResult.source] ?? "Unknown";
@@ -96,7 +112,7 @@ const cveChartPayload = {
   ],
 };
 
-const severityToString = (severity: SeveritySummary | undefined) =>
+const severityToString = (severity: CVESummary | undefined) =>
   severityOrder
     .map((key) => severity?.[key] ?? 0)
     .join(" / ");
@@ -216,26 +232,12 @@ const serializeJson = (input: unknown) =>
               data-catalog-card
               data-labels={pkg.labels.join(",")}
               data-provider-list={pkg.providers.join(",")}
-              data-has-ironbank={pkg.hasIronBank ? "true" : "false"}
-              data-has-chainguard={pkg.hasChainguard ? "true" : "false"}
-              data-vendor-only={pkg.vendorOnly ? "true" : "false"}
               data-search-text={pkg.searchText}
               data-app-id={pkg.id}
               data-app-name={pkg.name}
             >
               <header class="flex flex-col gap-3">
                 <div class="flex items-start gap-4">
-                  {pkg.logoUrl && (
-                    <div class="flex-shrink-0">
-                      <img 
-                        src={pkg.logoUrl} 
-                        alt={`${pkg.name} logo`}
-                        class="app-logo"
-                        width="48"
-                        height="48"
-                      />
-                    </div>
-                  )}
                   <div class="flex-1 min-w-0">
                     <h3 class="text-xl font-semibold text-white">{pkg.name}</h3>
                     <p class="mt-2 text-sm text-brand-gray-100">{pkg.summary}</p>
@@ -340,8 +342,6 @@ const serializeJson = (input: unknown) =>
                 <th scope="col" class="px-6 py-4">Package</th>
                 <th scope="col" class="px-6 py-4">Latest version</th>
                 <th scope="col" class="px-6 py-4">Providers</th>
-                <th scope="col" class="px-6 py-4">Iron Bank</th>
-                <th scope="col" class="px-6 py-4">Chainguard</th>
                 <th scope="col" class="px-6 py-4">Images</th>
                 <th scope="col" class="px-6 py-4">Critical / High / Medium / Low</th>
               </tr>
@@ -355,8 +355,6 @@ const serializeJson = (input: unknown) =>
                   </td>
                   <td class="px-6 py-4">{pkg.latestVersion}</td>
                   <td class="px-6 py-4">{pkg.providers.join(", ") || "—"}</td>
-                  <td class="px-6 py-4">{pkg.hasIronBank ? "Yes" : "No"}</td>
-                  <td class="px-6 py-4">{pkg.hasChainguard ? "Yes" : "No"}</td>
                   <td class="px-6 py-4">{pkg.imageCount}</td>
                   <td class="px-6 py-4 text-brand-blue-100">{severityToString(pkg.cves)}</td>
                 </tr>
@@ -372,7 +370,7 @@ const serializeJson = (input: unknown) =>
     <div class="absolute inset-0 bg-brand-blue-500/80 backdrop-blur-sm transition-opacity" data-overlay-backdrop></div>
     <div class="pointer-events-none absolute inset-0 flex items-center justify-center px-4 py-8">
       <article
-        class="pointer-events-auto relative w-full max-w-5xl overflow-hidden rounded-3xl border border-brand-blue-400 bg-brand-gray-500 shadow-[0_40px_120px_rgba(2,62,125,0.45)] transition-transform duration-300"
+        class="pointer-events-auto relative w-full max-w-6xl max-h-[90vh] overflow-y-auto overflow-x-hidden rounded-3xl border border-brand-blue-400 bg-brand-gray-500 shadow-[0_40px_120px_rgba(2,62,125,0.45)] transition-transform duration-300"
         data-overlay-panel
       >
         <header class="flex flex-col gap-6 border-b border-brand-blue-400 px-8 py-6 sm:flex-row sm:items-start sm:justify-between">
@@ -432,16 +430,13 @@ const serializeJson = (input: unknown) =>
             </div>
 
             <div class="rounded-3xl border border-brand-blue-400 bg-brand-blue-500/60 p-5">
-              <div class="grid gap-6 lg:grid-cols-[minmax(240px,280px),1fr]">
-                <div class="space-y-2" data-overlay-image-list></div>
-                <div class="space-y-4">
-                  <div class="flex flex-wrap gap-2" role="tablist">
-                    <button type="button" class="rounded-full border border-brand-blue-400 px-3 py-1 text-xs font-medium text-brand-gray-100 transition data-[active=true]:bg-brand-blue-300 data-[active=true]:text-white" data-overlay-tab="overview">Overview</button>
-                    <button type="button" class="rounded-full border border-brand-blue-400 px-3 py-1 text-xs font-medium text-brand-gray-100 transition data-[active=true]:bg-brand-blue-300 data-[active=true]:text-white" data-overlay-tab="scans">Scans</button>
-                    <button type="button" class="rounded-full border border-brand-blue-400 px-3 py-1 text-xs font-medium text-brand-gray-100 transition data-[active=true]:bg-brand-blue-300 data-[active=true]:text-white" data-overlay-tab="sboms">SBOMs</button>
-                  </div>
-                  <div class="min-h-[220px] space-y-4 text-sm text-brand-gray-100" data-overlay-tab-content></div>
+              <div class="space-y-4">
+                <div class="flex flex-wrap gap-2" role="tablist">
+                  <button type="button" class="rounded-full border border-brand-blue-400 px-3 py-1 text-xs font-medium text-brand-gray-100 transition data-[active=true]:bg-brand-blue-300 data-[active=true]:text-white" data-overlay-tab="overview">Overview</button>
+                  <button type="button" class="rounded-full border border-brand-blue-400 px-3 py-1 text-xs font-medium text-brand-gray-100 transition data-[active=true]:bg-brand-blue-300 data-[active=true]:text-white" data-overlay-tab="scans">Scans</button>
+                  <button type="button" class="rounded-full border border-brand-blue-400 px-3 py-1 text-xs font-medium text-brand-gray-100 transition data-[active=true]:bg-brand-blue-300 data-[active=true]:text-white" data-overlay-tab="sboms">SBOMs</button>
                 </div>
+                <div class="min-h-[400px] space-y-4 text-sm text-brand-gray-100" data-overlay-tab-content></div>
               </div>
             </div>
           </div>
